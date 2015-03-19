@@ -54,13 +54,13 @@ function cpt_sitetype(){
 add_action( 'init', 'cpt_sitetype', 0 );
 
 //******************************************
-//CPT - Attribute
+//CPT - Attributes
 //******************************************
-function cpt_Attribute(){
+function cpt_attributes(){
 	$labels = array(
-		'name'                => _x( 'Attribute', 'fenjoon' ),
-		'singular_name'       => _x( 'Attribute', 'fenjoon' ),
-		'menu_name'           => __( 'Attribute', 'fenjoon' ),
+		'name'                => _x( 'Attributes', 'fenjoon' ),
+		'singular_name'       => _x( 'Attributes', 'fenjoon' ),
+		'menu_name'           => __( 'Attributes', 'fenjoon' ),
 		'parent_item_colon'   => __( 'Parent Sitetype', 'fenjoon' ),
 		'all_items'           => __( 'All Sitetypes', 'fenjoon' ),
 		'view_item'           => __( 'View Sitetypes', 'fenjoon' ),
@@ -73,8 +73,8 @@ function cpt_Attribute(){
 		'not_found_in_trash'  => __( 'Not found in Trash', 'fenjoon' ),
 	);
 	$args = array(
-		'label'               => __( 'Attribute', 'fenjoon' ),
-		'description'         => __( 'Different Attribute, our team may design and develop', 'fenjoon' ),
+		'label'               => __( 'Attributes', 'fenjoon' ),
+		'description'         => __( 'Different Attributes, our team may design and develop', 'fenjoon' ),
 		'labels'              => $labels,
 		'supports'            => array( 'title', 'excerpt', 'editor', 'thumbnail' ),
 		'taxonomies'          => array( 'post_tag' ),
@@ -92,19 +92,19 @@ function cpt_Attribute(){
 		'publicly_queryable'  => true,
 		'capability_type'     => 'post',
 	);
-	register_post_type( 'Attribute', $args );
+	register_post_type( 'Attributes', $args );
 }
 // Hook into the 'init' action
-add_action( 'init', 'cpt_Attribute', 0 );
+add_action( 'init', 'cpt_attributes', 0 );
 
 //******************************************
-//CPT - Attribute
+//CPT - Features
 //******************************************
-function cpt_Equpment(){
+function cpt_features(){
 	$labels = array(
-		'name'                => _x( 'Equipment', 'fenjoon' ),
-		'singular_name'       => _x( 'Equipment', 'fenjoon' ),
-		'menu_name'           => __( 'Equipment', 'fenjoon' ),
+		'name'                => _x( 'Features', 'fenjoon' ),
+		'singular_name'       => _x( 'Features', 'fenjoon' ),
+		'menu_name'           => __( 'Features', 'fenjoon' ),
 		'parent_item_colon'   => __( 'Parent Sitetype', 'fenjoon' ),
 		'all_items'           => __( 'All Sitetypes', 'fenjoon' ),
 		'view_item'           => __( 'View Sitetypes', 'fenjoon' ),
@@ -117,8 +117,8 @@ function cpt_Equpment(){
 		'not_found_in_trash'  => __( 'Not found in Trash', 'fenjoon' ),
 	);
 	$args = array(
-		'label'               => __( 'Equipment', 'fenjoon' ),
-		'description'         => __( 'Different Equpment, our team may design and develop', 'fenjoon' ),
+		'label'               => __( 'Features', 'fenjoon' ),
+		'description'         => __( 'Different Features, our team may design and develop', 'fenjoon' ),
 		'labels'              => $labels,
 		'supports'            => array( 'title', 'excerpt', 'editor', 'thumbnail' ),
 		'taxonomies'          => array( 'post_tag' ),
@@ -136,8 +136,8 @@ function cpt_Equpment(){
 		'publicly_queryable'  => true,
 		'capability_type'     => 'post',
 	);
-	register_post_type( 'Equipment', $args );
+	register_post_type( 'Features', $args );
 }
 // Hook into the 'init' action
-add_action( 'init', 'cpt_Equipment', 0 );
+add_action( 'init', 'cpt_features', 0 );
 ?>
