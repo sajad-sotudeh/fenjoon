@@ -29,7 +29,7 @@ function cpt_sitetype(){
 		'not_found_in_trash'  => __( 'Not found in Trash', 'fenjoon' ),
 	);
 	$args = array(
-		'label'               => __( 'Post Types', 'fenjoon' ),
+		'label'               => __( 'sitetypes', 'fenjoon' ),
 		'description'         => __( 'Different site types, our team may design and develop', 'fenjoon' ),
 		'labels'              => $labels,
 		'supports'            => array( 'title', 'excerpt', 'editor', 'thumbnail' ),
