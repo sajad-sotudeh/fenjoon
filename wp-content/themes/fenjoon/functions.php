@@ -241,7 +241,6 @@ function save_coselected_children() {
 		return;
 	}
 	$coselected_children_string = $_POST['coselected_children_string'];
-	echo '############';
 	if($coselected_children_string) update_post_meta($post_id, 'coselected_children', $coselected_children_string);
 }
 add_action( 'add_meta_boxes','add_children_metabox',0 );
