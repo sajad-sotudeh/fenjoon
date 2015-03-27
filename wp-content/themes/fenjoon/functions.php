@@ -1,6 +1,6 @@
 <?php
 //******************************************
-//Basic Setup
+// Basic Setup
 //******************************************
 function fenjoon_setup(){
 	// Make fenjoon available for translation.
@@ -9,8 +9,17 @@ function fenjoon_setup(){
 	add_theme_support( 'post-thumbnails' );
 }
 add_action( 'after_setup_theme', 'fenjoon_setup' );
+
 //******************************************
-//CPT - Site Type
+// Add Custom JS to Admin Post Edit Panel
+//******************************************
+function add_fenjoon_admin_js() {
+	wp_enqueue_script( 'fenjoon_admin_js', admin_url() . 'js/fenjoon_admin.js', array(), '1.0', true );
+}
+add_filter('admin_head', 'add_fenjoon_admin_js');
+
+//******************************************
+// CPT - Site Type
 //******************************************
 function cpt_sitetype(){
 	$labels = array(
@@ -48,13 +57,13 @@ function cpt_sitetype(){
 		'publicly_queryable'  => true,
 		'capability_type'     => 'post',
 	);
-	register_post_type( 'sitetype', $args );
+	register_post_type( 'sitetypes', $args );
 }
 // Hook into the 'init' action
 add_action( 'init', 'cpt_sitetype', 0 );
 
 //******************************************
-//CPT - Attributes
+// CPT - Attributes
 //******************************************
 function cpt_attributes(){
 	$labels = array(
@@ -92,13 +101,13 @@ function cpt_attributes(){
 		'publicly_queryable'  => true,
 		'capability_type'     => 'post',
 	);
-	register_post_type( 'Attributes', $args );
+	register_post_type( 'attributes', $args );
 }
 // Hook into the 'init' action
 add_action( 'init', 'cpt_attributes', 0 );
 
 //******************************************
-//CPT - Features
+// CPT - Features
 //******************************************
 function cpt_features(){
 	$labels = array(
@@ -136,19 +145,18 @@ function cpt_features(){
 		'publicly_queryable'  => true,
 		'capability_type'     => 'post',
 	);
-	register_post_type( 'Features', $args );
+	register_post_type( 'features', $args );
 }
 // Hook into the 'init' action
 add_action( 'init', 'cpt_features', 0 );
 
-
 //******************************************
-//CPT - Modules
+// CPT - Modules
 //******************************************
 function cpt_modules(){
 	$labels = array(
 		'name'                => _x( 'Modules', 'fenjoon' ),
-		'singular_name'       => _x( 'Modules', 'fenjoon' ),
+		'singular_name'       => _x( 'Module', 'fenjoon' ),
 		'menu_name'           => __( 'Modules', 'fenjoon' ),
 		'parent_item_colon'   => __( 'Parent Module', 'fenjoon' ),
 		'all_items'           => __( 'All Modules', 'fenjoon' ),
@@ -181,57 +189,61 @@ function cpt_modules(){
 		'publicly_queryable'  => true,
 		'capability_type'     => 'post',
 	);
-	register_post_type( 'Modules', $args );
+	register_post_type( 'modules', $args );
 }
 // Hook into the 'init' action
 add_action( 'init', 'cpt_modules', 0 );
 
+//******************************************
+// Children co-selection metabox
+//******************************************
+function add_children_metabox(){
+	if( is_admin() ){
+		global $pagenow;
+		if( 'post.php' == $pagenow ){
+			global $post;
+			if(empty($post->post_parent)){
+				$post_type = get_post_type_object( get_post_type( $post ) );
+				add_meta_box( 
+						'coselected_children',
+						 __('Select child '.$post_type->label.' to be auto-selected by selecting this '.$post_type->labels->singular_name ),
+						 'children_list',
+						 $post->post_type,'advanced','core'
+				);	
+			}
+		}
+	}
+}
 
-// Get the children of each parent post
-function get_post_children(){
+function children_list($post) {
+	wp_nonce_field( basename( __FILE__ ), 'coselected_children' );
+	$coselected_children_string = get_post_meta( $post->ID, 'coselected_children', 1 );
+	$coselected_children = !empty( $coselected_children ) ? $coselected_children : '';
+	$coselected_children_array = explode( '-', $coselected_children_string );
+	$children = get_children( array( 'post_type' => $post->post_type, 'post_parent' => $post->ID ) );
+	foreach( $children as $child){ ?>
+		<input class="checkbox" type="checkbox" name="child-<?php echo $child->ID;?>" value="<?php echo $child->ID;?>" <?php echo (in_array( $child->ID, $coselected_children_array ) ? 'checked' : ''); ?> /><?php echo $child->post_title;?><br/>
+<?php	} ?>
+	<input type="hidden" name="coselected_children_string">
+	<div id="coselected_children_string" style="visibility:hidden;"></div>
+<?php
+}
+
+function save_coselected_children() {
 	global $post;
-	$children= get_children(array('post_type'=> $post->post_type,'post_parent' => null));
-	$parent=array();
-	foreach($children as $child):
-	if($child->post_parent!=0):
-		if(isset($parent[$child->post_parent])) :
-			$subparent=$parent[$child->post_parent];
-			array_push($subparent,$child->ID);
-			$parent[$child->post_parent]=$subparent;
-		else:
-			$parent[$child->post_parent]=array($child->ID);
-		endif;
-			$child_name[$child->ID]=$child->post_name;
-	endif;
-	endforeach;
-	return array('id'=>$parent,'name'=>$child_name);
-	
+	$post_id = $post->ID;
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+	if ( !wp_verify_nonce( $_POST['coselected_children'], basename( __FILE__ ) ) ) return;
+	if ( 'page' == $_POST['post_type'] ) {
+		if ( !current_user_can( 'edit_page', $post_id ) ) return;
+	}else{
+		if ( !current_user_can( 'edit_post', $post_id ) )
+		return;
+	}
+	$coselected_children_string = $_POST['coselected_children_string'];
+	echo '############';
+	if($coselected_children_string) update_post_meta($post_id, 'coselected_children', $coselected_children_string);
 }
-// Create metabox for parent posts
-function child_selection() {
-	global $post;
-	$parent=get_post_children();
-	$parent_name=$parent['name'];
-	$parent_id=$parent['id'];
-	$children=$parent_id[$post->ID];
-	if(isset($children)):
-		add_meta_box( 
-				'custom-post-meta',
-				 __('Select subposts'),
-				 'child_selection_callback',
-				 $post->post_type,'side','core',
-				 array('children'=>$children,'name'=>$parent_name)
-				 );	
-	endif;
-}
-add_action( 'add_meta_boxes','child_selection',0 );
-
-function child_selection_callback($post,$metabox) {
-	$children=$metabox['args']['children'];
-	$parent_name=$metabox['args']['name'];
-	for($i=0;$i<sizeof($children);$i++):   
-      echo '<input type="checkbox" id="subpost" name="subpost" value='.get_post_meta.'/>'.$parent_name[$children[$i]].'<br/>';
-    endfor;
-}
-
-
+add_action( 'add_meta_boxes','add_children_metabox',0 );
+add_action( 'save_post', 'save_coselected_children' );
+?>
