@@ -50,7 +50,7 @@ function cpt_sitetype(){
 		'show_in_nav_menus'   => true,
 		'show_in_admin_bar'   => true,
 		'menu_position'       => 5,
-		'menu_icon'			  => 'dashicons-welcome-widgets-menus',
+		'menu_icon'			  => 'dashicons-welcome-view-site',
 		'can_export'          => true,
 		'has_archive'         => true,
 		'exclude_from_search' => false,
@@ -94,7 +94,7 @@ function cpt_attributes(){
 		'show_in_nav_menus'   => true,
 		'show_in_admin_bar'   => true,
 		'menu_position'       => 5,
-		'menu_icon'			  => 'dashicons-welcome-widgets-menus',
+		'menu_icon'			  => 'dashicons-plus-alt',
 		'can_export'          => true,
 		'has_archive'         => true,
 		'exclude_from_search' => false,
@@ -138,7 +138,7 @@ function cpt_features(){
 		'show_in_nav_menus'   => true,
 		'show_in_admin_bar'   => true,
 		'menu_position'       => 5,
-		'menu_icon'			  => 'dashicons-welcome-widgets-menus',
+		'menu_icon'			  => 'dashicons-admin-generic',
 		'can_export'          => true,
 		'has_archive'         => true,
 		'exclude_from_search' => false,
@@ -182,7 +182,7 @@ function cpt_modules(){
 		'show_in_nav_menus'   => true,
 		'show_in_admin_bar'   => true,
 		'menu_position'       => 5,
-		'menu_icon'			  => 'dashicons-welcome-widgets-menus',
+		'menu_icon'			  => 'dashicons-images-alt',
 		'can_export'          => true,
 		'has_archive'         => true,
 		'exclude_from_search' => false,
@@ -205,8 +205,8 @@ function add_children_metabox(){
 			if(empty($post->post_parent)){
 				$post_type = get_post_type_object( get_post_type( $post ) );
 				add_meta_box( 
-						'coselected_children',
-						 __('Select child '.$post_type->label.' to be auto-selected by selecting this '.$post_type->labels->singular_name ),
+						'coselected_children', //id
+						 __('Select child '.$post_type->label.' to be auto-selected by selecting this '.$post_type->labels->singular_name ), //title
 						 'children_list',
 						 $post->post_type,'advanced','core'
 				);	
@@ -245,4 +245,50 @@ function save_coselected_children() {
 }
 add_action( 'add_meta_boxes','add_children_metabox',0 );
 add_action( 'save_post', 'save_coselected_children' );
+
+
+//////////////////////////////////////////////////
+///// < Orders_CPT to submit costumer's Order >///
+//////////////////////////////////////////////////
+	
+function orders_cpt(){
+	$labels = array(
+		'name'                => _x( 'Orders', 'fenjoon' ),
+		'singular_name'       => _x( 'Order', 'fenjoon' ),
+		'menu_name'           => __( 'Orders', 'fenjoon' ),
+		'all_items'           => __( 'All Orders', 'fenjoon' ),
+		'view_item'           => __( 'View Orders', 'fenjoon' ),
+		'add_new_item'        => __( 'Add a New Order', 'fenjoon' ),
+		'add_new'             => __( 'Add a New', 'fenjoon' ),
+		'edit_item'           => __( 'Edit Order', 'fenjoon' ),
+		'update_item'         => __( 'Update Order', 'fenjoon' ),
+		'search_items'        => __( 'Search Order', 'fenjoon' ),
+		'not_found'           => __( 'Not found', 'fenjoon' ),
+		'not_found_in_trash'  => __( 'Not found in Trash', 'fenjoon' ),
+	);
+	$args = array(
+		'label'               => __( 'Orders', 'fenjoon' ),
+		'description'         => __( 'The requests which are submitted known as ORDERS!', 'fenjoon' ),
+		'labels'              => $labels,
+		'supports'            => array( 'title', 'excerpt', 'editor' ),
+		'exclude_from_search' => true,
+		'hierarchical'        => false,
+		'public'              => false,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'show_in_nav_menus'   => true,
+		'show_in_admin_bar'   => true,
+		'menu_position'       => 5,
+	        'menu_icon'	      => 'dashicons-cart',
+		'has_archive'         => true,
+		'publicly_queryable'  => true,
+		'capability_type'     => 'post',
+	);
+	register_post_type( 'orders_cpt', $args );
+}
+
+add_action('init','orders_cpt');
+
+
+
 ?>
