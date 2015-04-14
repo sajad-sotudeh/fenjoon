@@ -245,4 +245,55 @@ function save_coselected_children() {
 }
 add_action( 'add_meta_boxes','add_children_metabox',0 );
 add_action( 'save_post', 'save_coselected_children' );
+
+
+//////////////////////////////////////////////////
+///// < Orders_CPT to submit costumer's Order >///
+//////////////////////////////////////////////////
+	
+add_action('init','orders_cpt');
+
+function orders_cpt(){
+	$labels = array(
+		'name'                => _x( 'Orders', 'fenjoon' ),
+		'singular_name'       => _x( 'order', 'fenjoon' ),
+		'menu_name'           => __( 'Orders', 'fenjoon' ),
+		//'parent_item_colon'   => __( 'Parent Sitetype', 'fenjoon' ),
+		'all_items'           => __( 'All Orders', 'fenjoon' ),
+		'view_item'           => __( 'View Orders', 'fenjoon' ),
+		'add_new_item'        => __( 'Add a New Order', 'fenjoon' ),
+		'add_new'             => __( 'Add a New', 'fenjoon' ),
+		'edit_item'           => __( 'Edit Order', 'fenjoon' ),
+		'update_item'         => __( 'Update Order', 'fenjoon' ),
+		'search_items'        => __( 'Search Order', 'fenjoon' ),
+		'not_found'           => __( 'Not found', 'fenjoon' ),
+		'not_found_in_trash'  => __( 'Not found in Trash', 'fenjoon' ),
+	);
+	$args = array(
+		'label'               => __( 'orders', 'fenjoon' ),
+		'description'         => __( 'The requests which are submitted known as ORDERS!', 'fenjoon' ),
+		'labels'              => $labels,
+		'supports'            => array( 'title', 'excerpt', 'editor', 'thumbnail','excerpt', 'comments' ),
+		'exclude_from_search' => false,
+		'hierarchical'        => false,
+		'public'              => false,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'show_in_nav_menus'   => true,
+		'show_in_admin_bar'   => true,
+		'menu_position'       => 80,
+		'menu_icon'			  => 'dashicons-list-view',
+		'can_export'          => true,
+		'has_archive'         => true,
+		
+		'publicly_queryable'  => true,
+		'capability_type'     => 'post',
+	);
+	register_post_type( 'orders_cpt', $args );
+}
+
+
+
+
+
 ?>
