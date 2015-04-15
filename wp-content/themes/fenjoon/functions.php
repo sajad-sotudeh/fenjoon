@@ -195,7 +195,7 @@ function cpt_modules(){
 add_action( 'init', 'cpt_modules', 0 );
 
 //******************************************
-// Children co-selection metabox
+// Add Children co-selection metabox to Modules
 //******************************************
 function add_children_metabox(){
 	if( is_admin() ){
@@ -204,30 +204,33 @@ function add_children_metabox(){
 			global $post;
 			if(empty($post->post_parent)){
 				$post_type = get_post_type_object( get_post_type( $post ) );
+				//if($post_type->label!='Orders')
 				add_meta_box( 
 						'coselected_children', //id
 						 __('Select child '.$post_type->label.' to be auto-selected by selecting this '.$post_type->labels->singular_name ), //title
-						 'children_list',
-						 $post->post_type,'advanced','core'
+						'children_list', //callback
+						'modules', //CPT
+						'advanced', //position in admin panel
+						'core' //priority
 				);	
 			}
 		}
 	}
 }
 
-function children_list($post) {
+function children_list( $post ) {
 	wp_nonce_field( basename( __FILE__ ), 'coselected_children' );
 	$coselected_children_string = get_post_meta( $post->ID, 'coselected_children', 1 );
-	$coselected_children = !empty( $coselected_children ) ? $coselected_children : '';
-	$coselected_children_array = explode( '-', $coselected_children_string );
+	$coselected_children_string = !empty( $coselected_children_string ) ? $coselected_children_string : '';
+	$coselected_children_array = explode( '+', $coselected_children_string );
 	$children = get_children( array( 'post_type' => $post->post_type, 'post_parent' => $post->ID ) );
 	foreach( $children as $child){ ?>
 		<input class="checkbox" type="checkbox" name="child-<?php echo $child->ID;?>" value="<?php echo $child->ID;?>" <?php echo (in_array( $child->ID, $coselected_children_array ) ? 'checked' : ''); ?> /><?php echo $child->post_title;?><br/>
 <?php	} ?>
-	<input type="hidden" name="coselected_children_string">
-	<div id="coselected_children_string" style="visibility:hidden;"></div>
+	<input type="hidden" name="string" value="<?php echo $coselected_children_string;?>"/>
 <?php
 }
+add_action( 'add_meta_boxes','add_children_metabox',0 );
 
 function save_coselected_children() {
 	global $post;
@@ -240,17 +243,14 @@ function save_coselected_children() {
 		if ( !current_user_can( 'edit_post', $post_id ) )
 		return;
 	}
-	$coselected_children_string = $_POST['coselected_children_string'];
-	if($coselected_children_string) update_post_meta($post_id, 'coselected_children', $coselected_children_string);
+	$coselected_children_string = $_POST['string'];
+	if( $coselected_children_string ) update_post_meta( $post_id, 'coselected_children', $coselected_children_string );
 }
-add_action( 'add_meta_boxes','add_children_metabox',0 );
 add_action( 'save_post', 'save_coselected_children' );
 
-
-//////////////////////////////////////////////////
-///// < Orders_CPT to submit costumer's Order >///
-//////////////////////////////////////////////////
-	
+//******************************************
+// Orders CPT to submit customer's Order
+//******************************************	
 function orders_cpt(){
 	$labels = array(
 		'name'                => _x( 'Orders', 'fenjoon' ),
@@ -270,7 +270,7 @@ function orders_cpt(){
 		'label'               => __( 'Orders', 'fenjoon' ),
 		'description'         => __( 'The requests which are submitted known as ORDERS!', 'fenjoon' ),
 		'labels'              => $labels,
-		'supports'            => array( 'title', 'excerpt', 'editor' ),
+		'supports'            => array( 'title', 'excerpt', 'editor','comment' ),
 		'exclude_from_search' => true,
 		'hierarchical'        => false,
 		'public'              => false,
@@ -279,16 +279,68 @@ function orders_cpt(){
 		'show_in_nav_menus'   => true,
 		'show_in_admin_bar'   => true,
 		'menu_position'       => 5,
-	        'menu_icon'	      => 'dashicons-cart',
+	  'menu_icon'					  => 'dashicons-cart',
 		'has_archive'         => true,
 		'publicly_queryable'  => true,
 		'capability_type'     => 'post',
 	);
-	register_post_type( 'orders_cpt', $args );
+	register_post_type( 'orders', $args );
 }
-
 add_action('init','orders_cpt');
 
+//******************************************
+// Add order list metabox to Orders
+//******************************************
+function add_order_list_metabox(){
+	if( is_admin() ){
+		global $pagenow;
+		if( 'post.php' == $pagenow ){
+			global $post;
+				add_meta_box( 
+				'mydata', //id
+				__('Submitted Choices selected by Costumer' ), //title
+				'order_list', //callback
+				'orders', //CPT
+				'advanced', //position in admin panel
+				'core' //priority
+			); 
+		}
+	}
+}
 
+function order_list( $post ){
+	$args = array( 'post_type' => array( 'sitetypes', 'attributes', 'features', 'modules' ), 'orderby' => 'menu_order' );
+	$the_query = new WP_Query( $args );
+	if ( $the_query->have_posts() ) {
+		wp_nonce_field(basename( __FILE__ ), 'order_list');
+		$order_str = get_post_meta( $post->ID, 'order_str', 1 );
+		$order_str = !empty( $order_str ) ? $order_str : '';
+		$order_arr = explode( '+', $order_str );
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();?>
+			<input class="checkbox" type="checkbox" name="post-<?php the_ID();?>" value="<?php echo the_ID();?>" <?php echo (in_array( get_the_ID(), $order_arr ) ? 'checked' : ''); ?> /><?php the_title();?><br/>
+<?php
+		}
+	}else{
+	}
+	wp_reset_postdata();?>
+	<input type="hidden" name="string" value="<?php echo $order_str;?>"/>
+<?php
+}
+add_action( 'add_meta_boxes','add_order_list_metabox',0 );
 
+function save_order_list() {
+	global $post;
+	$post_id = $post->ID;
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+	if ( !wp_verify_nonce( $_POST['order_list'], basename( __FILE__ ) ) ) return;
+	if ( 'page' == $_POST['post_type'] ) {
+		if ( !current_user_can( 'edit_page', $post_id ) ) return;
+	}else{
+		if ( !current_user_can( 'edit_post', $post_id ) ) return;
+	}
+	$order_str = $_POST['string'];
+	if( $order_str ) update_post_meta( $post_id, 'order_str', $order_str );
+}
+add_action( 'save_post', 'save_order_list' );
 ?>
