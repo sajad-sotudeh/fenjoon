@@ -295,7 +295,7 @@ function orders_cpt(){
 add_action('init','orders_cpt');
 
 //******************************************
-// CPT - Orders
+// CPT - Projects
 //******************************************	
 function projects_cpt(){
 	$labels = array(
@@ -383,10 +383,25 @@ function save_order_list() {
 	}else{
 		if ( !current_user_can( 'edit_post', $post_id ) ) return;
 	}
+// Order list metabox
 	$order_str = $_POST['string'];
 	if( $order_str ) update_post_meta( $post_id, 'order_str', $order_str );
+
+// Order last changes metabox
+	$changes_str = get_post_meta( $post_id, 'changes_str', 1 );
+	$changes_str = !empty( $changes_str ) ? $changes_str : '';
+	$changes_arr = array();
+	if ( !empty( $changes_str ) ) $changes_arr = explode( "+", $changes_str );
+	if( count( $changes_arr ) == 5 ) {array_shift( $changes_arr );};
+	global $current_user;
+	$change_str = $current_user->ID;
+	$date_info = jdate( 'h:i - j F Y', strtotime( get_the_modified_date() ) );
+	$change_str = $change_str.'*'.$date_info;
+	array_push( $changes_arr, $change_str );
+	$changes_str = implode( "+", $changes_arr );
+	update_post_meta( $post_id, 'changes_str', $changes_str );
 	
-	remove_action( 'save_post', 'save_order_list' );
+// Order to Project metabox
 	$project_id = get_post_meta( $post_id, 'project_id', 1 );
 	if ( '' != $project_id ) return;
 	if ( !current_user_can( 'publish_post' ) ) return;
@@ -399,23 +414,35 @@ function save_order_list() {
 		'post_status'		=> 'publish',
 		'post_author'		=> $user_ID
 	);
+	remove_action( 'post_updated', 'save_order_list' );
 	$project_id = wp_insert_post( $new_project );
 	if ( 0 != $project_id ) update_post_meta( $post->ID, 'project_id', $project_id );
 }
-add_action( 'save_post', 'save_order_list' );
+add_action( 'post_updated', 'save_order_list' );
 
 //******************************************
 // Add Order to Project switch - Orders page
+// Add last changes by list - Orders page
 //******************************************
 function add_order_to_project_metabox(){
 	if( is_admin() ){
 		global $pagenow;
 		if( 'post.php' == $pagenow ){
-			global $post;
 			add_meta_box( 
 				'order_to_project', //id
 				__('Start its Project now!' ), //title
 				'order_to_project', //callback
+				'orders', //CPT
+				'side', //position in admin panel
+				'core' //priority
+			);
+			global $post;
+			$changes_str = get_post_meta( $post->ID, 'changes_str', 1 );
+			if( empty( $changes_str ) ) return;
+			add_meta_box( 
+				'last_change_by', //id
+				__('Last changes of this order' ), //title
+				'last_change_by', //callback
 				'orders', //CPT
 				'side', //position in admin panel
 				'core' //priority
@@ -436,6 +463,33 @@ function order_to_project( $post ){
 			</div>
 		</div>
 	</div>
+<?php
+}
+
+function last_change_by( $post ){
+	$changes_str = get_post_meta( $post->ID, 'changes_str', 1 );
+	if( empty( $changes_str ) ) return;
+	$changes_arr = explode( '+', $changes_str );
+	$changes_time = array();
+	$changes_user = array();
+	foreach( $changes_arr as $change ){
+		$change_arr = explode( '*', $change ); 
+		array_push( $changes_user, $change_arr[0] );
+		array_push( $changes_time, $change_arr[1] );
+	}
+	$users = get_users( array( 'include' => $changes_user ) ); ?>
+	<ul class="listofrows"">
+<?php
+	for( $i=0; $i<count( $changes_arr ); $i++ ){
+		?>
+		<li class="row">
+			<div class="right"><?php echo $users[$i]->display_name;?></div>
+			<div class="left"><?php echo $changes_time[$i];?></div>
+		</li>
+<?php
+	}
+?>
+	</ul>
 <?php
 }
 add_action( 'add_meta_boxes', 'add_order_to_project_metabox', 0 );

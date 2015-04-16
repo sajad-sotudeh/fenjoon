@@ -1,3 +1,16 @@
+ul.listofrows{
+	overflow: hidden;
+}
+li.row{
+	clear: both;
+	overflow: hidden;
+}
+li.row .right{
+	float: right;
+}
+li.row .left{
+	float: left;
+}
 #order-to-project-switch{
 	text-align:center;
 	padding:50px 0;
