@@ -11,12 +11,18 @@ function fenjoon_setup(){
 add_action( 'after_setup_theme', 'fenjoon_setup' );
 
 //******************************************
-// Add Custom JS to Admin Post Edit Panel
+// Add Custom JS & CSS to Admin Post Edit Panel
 //******************************************
 function add_fenjoon_admin_js() {
 	wp_enqueue_script( 'fenjoon_admin_js', admin_url() . 'js/fenjoon_admin.js', array(), '1.0', true );
 }
 add_filter('admin_head', 'add_fenjoon_admin_js');
+
+function add_fenjoon_admin_css() {
+	wp_register_style( 'fenjoon_admin_css', admin_url() . 'css/fenjoon_admin.css', false, '1.0' );
+	wp_enqueue_style( 'fenjoon_admin_css' );
+}
+add_action( 'admin_enqueue_scripts', 'add_fenjoon_admin_css' );
 
 //******************************************
 // CPT - Site Type
@@ -195,7 +201,7 @@ function cpt_modules(){
 add_action( 'init', 'cpt_modules', 0 );
 
 //******************************************
-// Add Children co-selection metabox to Modules
+// Add Children co-selection metabox to Modules - Modules page
 //******************************************
 function add_children_metabox(){
 	if( is_admin() ){
@@ -249,7 +255,7 @@ function save_coselected_children() {
 add_action( 'save_post', 'save_coselected_children' );
 
 //******************************************
-// Orders CPT to submit customer's Order
+// CPT - Orders
 //******************************************	
 function orders_cpt(){
 	$labels = array(
@@ -289,15 +295,54 @@ function orders_cpt(){
 add_action('init','orders_cpt');
 
 //******************************************
-// Add order list metabox to Orders
+// CPT - Orders
+//******************************************	
+function projects_cpt(){
+	$labels = array(
+		'name'                => _x( 'Projects', 'fenjoon' ),
+		'singular_name'       => _x( 'Project', 'fenjoon' ),
+		'menu_name'           => __( 'Projects', 'fenjoon' ),
+		'all_items'           => __( 'All Projects', 'fenjoon' ),
+		'view_item'           => __( 'View Project', 'fenjoon' ),
+		'add_new_item'        => __( 'Add a New Project', 'fenjoon' ),
+		'add_new'             => __( 'Add a New', 'fenjoon' ),
+		'edit_item'           => __( 'Edit Project', 'fenjoon' ),
+		'update_item'         => __( 'Update Project', 'fenjoon' ),
+		'search_items'        => __( 'Search Project', 'fenjoon' ),
+		'not_found'           => __( 'Not found', 'fenjoon' ),
+		'not_found_in_trash'  => __( 'Not found in Trash', 'fenjoon' ),
+	);
+	$args = array(
+		'label'               => __( 'Projects', 'fenjoon' ),
+		'description'         => __( 'The Projects which are submitted known as Projects!', 'fenjoon' ),
+		'labels'              => $labels,
+		'supports'            => array( 'title', 'excerpt', 'editor','comment' ),
+		'exclude_from_search' => true,
+		'hierarchical'        => false,
+		'public'              => false,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'show_in_nav_menus'   => true,
+		'show_in_admin_bar'   => true,
+		'menu_position'       => 5,
+	  'menu_icon'					  => 'dashicons-welcome-widgets-menus',
+		'has_archive'         => true,
+		'publicly_queryable'  => true,
+		'capability_type'     => 'post',
+	);
+	register_post_type( 'projects', $args );
+}
+add_action('init','projects_cpt');
+
+//******************************************
+// Add order list metabox to Orders - Orders page
 //******************************************
 function add_order_list_metabox(){
 	if( is_admin() ){
 		global $pagenow;
 		if( 'post.php' == $pagenow ){
-			global $post;
-				add_meta_box( 
-				'mydata', //id
+			add_meta_box( 
+				'order_list', //id
 				__('Submitted Choices selected by Costumer' ), //title
 				'order_list', //callback
 				'orders', //CPT
@@ -312,7 +357,7 @@ function order_list( $post ){
 	$args = array( 'post_type' => array( 'sitetypes', 'attributes', 'features', 'modules' ), 'orderby' => 'menu_order' );
 	$the_query = new WP_Query( $args );
 	if ( $the_query->have_posts() ) {
-		wp_nonce_field(basename( __FILE__ ), 'order_list');
+		wp_nonce_field(basename( __FILE__ ), 'save_order');
 		$order_str = get_post_meta( $post->ID, 'order_str', 1 );
 		$order_str = !empty( $order_str ) ? $order_str : '';
 		$order_arr = explode( '+', $order_str );
@@ -321,19 +366,18 @@ function order_list( $post ){
 			<input class="checkbox" type="checkbox" name="post-<?php the_ID();?>" value="<?php echo the_ID();?>" <?php echo (in_array( get_the_ID(), $order_arr ) ? 'checked' : ''); ?> /><?php the_title();?><br/>
 <?php
 		}
-	}else{
 	}
 	wp_reset_postdata();?>
 	<input type="hidden" name="string" value="<?php echo $order_str;?>"/>
 <?php
 }
-add_action( 'add_meta_boxes','add_order_list_metabox',0 );
+add_action( 'add_meta_boxes', 'add_order_list_metabox', 0 );
 
 function save_order_list() {
 	global $post;
 	$post_id = $post->ID;
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
-	if ( !wp_verify_nonce( $_POST['order_list'], basename( __FILE__ ) ) ) return;
+	if ( !wp_verify_nonce( $_POST['save_order'], basename( __FILE__ ) ) ) return;
 	if ( 'page' == $_POST['post_type'] ) {
 		if ( !current_user_can( 'edit_page', $post_id ) ) return;
 	}else{
@@ -341,6 +385,59 @@ function save_order_list() {
 	}
 	$order_str = $_POST['string'];
 	if( $order_str ) update_post_meta( $post_id, 'order_str', $order_str );
+	
+	remove_action( 'save_post', 'save_order_list' );
+	$project_id = get_post_meta( $post_id, 'project_id', 1 );
+	if ( '' != $project_id ) return;
+	if ( !current_user_can( 'publish_post' ) ) return;
+	if ( !isset( $_POST['chkswchipt'] ) ) return;
+	$user_ID = get_current_user_id();
+	$new_project = array(
+		'post_title'    => 'Project '.$post->post_title,
+		'post_content'  => $post->post_content,
+		'post_type'   	=> 'projects',
+		'post_status'		=> 'publish',
+		'post_author'		=> $user_ID
+	);
+	$project_id = wp_insert_post( $new_project );
+	if ( 0 != $project_id ) update_post_meta( $post->ID, 'project_id', $project_id );
 }
 add_action( 'save_post', 'save_order_list' );
+
+//******************************************
+// Add Order to Project switch - Orders page
+//******************************************
+function add_order_to_project_metabox(){
+	if( is_admin() ){
+		global $pagenow;
+		if( 'post.php' == $pagenow ){
+			global $post;
+			add_meta_box( 
+				'order_to_project', //id
+				__('Start its Project now!' ), //title
+				'order_to_project', //callback
+				'orders', //CPT
+				'side', //position in admin panel
+				'core' //priority
+			); 
+		}
+	}
+}
+
+function order_to_project( $post ){
+	$project_id = get_post_meta( $post->ID, 'project_id', 1 );?>
+	<p><?php _e('Please note that this is a ONE TIME start and your changes are irreversible!','fenjoon');?></p>
+	<div id="order-to-project-switch">
+		<div class="checkbox-switch">
+			<input type="checkbox" name="chkswchipt" class="chkswchipt" <?php if ( '' != $project_id ) echo 'checked disabled';?>>
+			<div class="checkbox-animate">
+				<span class="checkbox-on"><?php _e('Project Started', 'fenjoon');?></span>
+				<span class="checkbox-off"><?php _e('Change to Project', 'fenjoon');?></span>
+			</div>
+		</div>
+	</div>
+<?php
+}
+add_action( 'add_meta_boxes', 'add_order_to_project_metabox', 0 );
+
 ?>
