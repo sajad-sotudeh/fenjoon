@@ -1,3 +1,11 @@
+div.added{
+	font-weight:bold;
+	background-color: #ccffcc;
+}
+div.removed{
+	font-weight:bold;
+	background-color: #ffcccc;
+}
 ul.listofrows{
 	overflow: hidden;
 }
