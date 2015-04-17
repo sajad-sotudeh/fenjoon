@@ -1,0 +1,385 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Fenjoon\n"
+"POT-Creation-Date: 2015-04-18 01:31+0330\n"
+"PO-Revision-Date: 2015-04-18 01:31+0330\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fa_IR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.5\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: functions.php:32 functions.php:34
+msgid "Sitetypes"
+msgstr "انواع وبسایت"
+
+#: functions.php:33
+msgid "Sitetype"
+msgstr "نوع سایت"
+
+#: functions.php:35
+msgid "Parent Sitetype"
+msgstr "نوع وبسایت مادر"
+
+#: functions.php:36
+msgid "All Sitetypes"
+msgstr "همه انواع وبسایت"
+
+#: functions.php:37
+msgid "View Sitetypes"
+msgstr "مشاهده انواع وبسایت"
+
+#: functions.php:38
+msgid "Add New Sitetype"
+msgstr "افزودن نوع وبسایت"
+
+#: functions.php:39 functions.php:83 functions.php:127 functions.php:171
+msgid "Add New"
+msgstr "افزودن"
+
+#: functions.php:40
+msgid "Edit Sitetype"
+msgstr "ویرایش نوع وبسایت"
+
+#: functions.php:41
+msgid "Update Sitetype"
+msgstr "به روزرسانی نوع وبسایت"
+
+#: functions.php:42
+msgid "Search Sitetype"
+msgstr "جستجوی نوع وبسایت"
+
+#: functions.php:43 functions.php:87 functions.php:131 functions.php:175
+#: functions.php:272 functions.php:312
+msgid "Not found"
+msgstr "یافت نشد"
+
+#: functions.php:44 functions.php:88 functions.php:132 functions.php:176
+#: functions.php:273 functions.php:313
+msgid "Not found in Trash"
+msgstr "در زباله دان یافت نشد"
+
+#: functions.php:47
+msgid "sitetypes"
+msgstr "انواع وبسایت"
+
+#: functions.php:48
+msgid "Different site types, our team may design and develop"
+msgstr "انواع مختلف وبسایت که تیم ما قادر به طراحی آن است"
+
+#: functions.php:76 functions.php:77 functions.php:78 functions.php:91
+msgid "Attributes"
+msgstr "ویژگی ها"
+
+#: functions.php:79
+msgid "Parent Attribute"
+msgstr "ویژگی مادر"
+
+#: functions.php:80
+msgid "All Attributes"
+msgstr "همه ویژگی ها"
+
+#: functions.php:81
+msgid "View Attributes"
+msgstr "مشاهده ویژگی ها"
+
+#: functions.php:82
+msgid "Add New Attribute"
+msgstr "افزودن ویژگی"
+
+#: functions.php:84
+msgid "Edit Attribute"
+msgstr "ویرایش ویژگی"
+
+#: functions.php:85
+msgid "Update Attributes"
+msgstr "به روز رسانی ویژگی"
+
+#: functions.php:86
+msgid "Search Attributes"
+msgstr "جستجوی ویژگی ها"
+
+#: functions.php:92
+msgid "Different Attributes, our team may design and develop"
+msgstr "ویژگی های محتلفی که تیم ما قادر به پیاده سازی آن است"
+
+#: functions.php:120 functions.php:121 functions.php:122 functions.php:135
+msgid "Features"
+msgstr "قابلیت ها"
+
+#: functions.php:123
+msgid "Parent Feature"
+msgstr "قابلیت مادر"
+
+#: functions.php:124
+msgid "All Features"
+msgstr "همه قابلیت ها"
+
+#: functions.php:125
+msgid "View Features"
+msgstr "مشاهده قابلیت ها"
+
+#: functions.php:126
+msgid "Add New Feature"
+msgstr "افزودن قابلیت"
+
+#: functions.php:128
+msgid "Edit Feature"
+msgstr "ویرایش قابلیت"
+
+#: functions.php:129
+msgid "Update Feature"
+msgstr "به روز رسانی قابلیت"
+
+#: functions.php:130
+msgid "Search Feature"
+msgstr "جستجوی قابلیت"
+
+#: functions.php:136
+msgid "Different Features, our team may design and develop"
+msgstr "قابلیت های محتلف که تیم ما قادر به پیاده سازی آن است"
+
+#: functions.php:164 functions.php:166 functions.php:179
+msgid "Modules"
+msgstr "ماژول ها"
+
+#: functions.php:165
+msgid "Module"
+msgstr "ماژول"
+
+#: functions.php:167
+msgid "Parent Module"
+msgstr "ماژول مادر"
+
+#: functions.php:168
+msgid "All Modules"
+msgstr "همه ماژول ها"
+
+#: functions.php:169
+msgid "View Modules"
+msgstr "مشهده ماژول ها"
+
+#: functions.php:170
+msgid "Add New Module"
+msgstr "افزودن ماژول"
+
+#: functions.php:172
+msgid "Edit Module"
+msgstr "ویرایش ماژول"
+
+#: functions.php:173
+msgid "Update Module"
+msgstr "به روز رسانی ماژول"
+
+#: functions.php:174
+msgid "Search Module"
+msgstr "جستجوی ماژول"
+
+#: functions.php:180
+msgid "Different Modules, our team may design and develop"
+msgstr "ماژول های مختلف که تیم ما قادر به پیاده سازی آن است"
+
+#: functions.php:216
+msgid "Select child "
+msgstr "جستجوی فرزند"
+
+#: functions.php:262 functions.php:264 functions.php:276
+msgid "Orders"
+msgstr "سفارش ها"
+
+#: functions.php:263
+msgid "Order"
+msgstr "سفارش"
+
+#: functions.php:265
+msgid "All Orders"
+msgstr "همه سفارش ها"
+
+#: functions.php:266
+msgid "View Orders"
+msgstr "مشاهده سفارش ها"
+
+#: functions.php:267
+msgid "Add a New Order"
+msgstr "افزودن سفارش"
+
+#: functions.php:268 functions.php:308
+msgid "Add a New"
+msgstr "افزودن"
+
+#: functions.php:269
+msgid "Edit Order"
+msgstr "ویرایش سفارش"
+
+#: functions.php:270
+msgid "Update Order"
+msgstr "به روز رسانی سفارش"
+
+#: functions.php:271
+msgid "Search Order"
+msgstr "جستجوی سفارش"
+
+#: functions.php:277
+msgid "The requests which are submitted known as ORDERS!"
+msgstr "سفارش هایی که به تیم ما ارائه میشود"
+
+#: functions.php:302 functions.php:304 functions.php:316
+msgid "Projects"
+msgstr "پروژه ها"
+
+#: functions.php:303
+msgid "Project"
+msgstr "پروژه"
+
+#: functions.php:305
+msgid "All Projects"
+msgstr "همه پروژه ها"
+
+#: functions.php:306
+msgid "View Project"
+msgstr "مشاهده پروژه"
+
+#: functions.php:307
+msgid "Add a New Project"
+msgstr "افزودن پروژه"
+
+#: functions.php:309
+msgid "Edit Project"
+msgstr "ویرایش پروژه"
+
+#: functions.php:310
+msgid "Update Project"
+msgstr "به روز رسانی پروژه"
+
+#: functions.php:311
+msgid "Search Project"
+msgstr "جستجوی پروژه"
+
+#: functions.php:317
+msgid "The Projects which are submitted known as Projects!"
+msgstr "پروژه هایی که از یک سفارش ایجاد میشوند"
+
+#: functions.php:346
+msgid "Submitted Choices selected by Costumer"
+msgstr "گزینه های انتخاب شده توسط مشتری"
+
+#: functions.php:421
+msgid "Project "
+msgstr "پروژه"
+
+#: functions.php:447
+msgid "Start its Project now!"
+msgstr "پروژه این سفارش را ایجاد کنید!"
+
+#: functions.php:458
+msgid "Last changes of this order"
+msgstr "آخرین تغییرات اعمال شده"
+
+#: functions.php:471
+msgid "Edit Project No. "
+msgstr "ویرایش پروژه شماره "
+
+#: functions.php:473
+msgid ""
+"Please note that this is a ONE TIME start and your changes are irreversible!"
+msgstr ""
+"لطفا توجه داشته باشید که این تغییر تنها یک بار اتفاق می افتد و غیر قابل "
+"بازگشت است. با اطمینان کامل تغییر دهید!"
+
+#: functions.php:478
+msgid "Project Started"
+msgstr "پروژه آغاز شد"
+
+#: functions.php:479
+msgid "Change to Project"
+msgstr "ایجاد یک پروژه"
+
+#: functions.php:520 functions.php:521
+msgid "Fenjoon Settings"
+msgstr "تنظیمات فنجون"
+
+#: functions.php:551
+msgid "Work Force Settings"
+msgstr "تنظیمات نیروی کار"
+
+#: functions.php:558
+msgid "Developers Count"
+msgstr "تعداد نفرات توسعه دهنده"
+
+#: functions.php:566
+msgid "Man-Hour Fee"
+msgstr "هزینه هر نفر ساعت کار"
+
+#: functions.php:574
+msgid "Daily Work Hours"
+msgstr "ساعت کار روزانه"
+
+#: functions.php:623
+msgid "NO Permission"
+msgstr "شما دسترسی کافی برای دیدن این بخش را ندارید!"
+
+#: functions.php:635
+msgid "Project Progress"
+msgstr "چک لیست پیشرفت پروژه"
+
+#: functions.php:643
+msgid "Last changes of this Project"
+msgstr "آخرین تغییرات اعمال شده"
+
+#: index.php:8
+msgid "(more...)"
+msgstr "بیشتر"
+
+#: index.php:11
+msgid "Sorry, no posts matched your criteria."
+msgstr "متاسفانه هیچ ارسالی با این مشخصات یافت نشد"
+
+#~ msgctxt "fenjoon"
+#~ msgid "Orders"
+#~ msgstr "سفارش ها"
+
+#~ msgctxt "fenjoon"
+#~ msgid "Order"
+#~ msgstr "سفارش"
+
+#~ msgctxt "fenjoon"
+#~ msgid "Sitetypes"
+#~ msgstr "انواع وبسایت"
+
+#~ msgctxt "fenjoon"
+#~ msgid "Sitetype"
+#~ msgstr "نوع وبسایت"
+
+#~ msgctxt "fenjoon"
+#~ msgid "Attributes"
+#~ msgstr "ویژگی ها"
+
+#~ msgctxt "fenjoon"
+#~ msgid "Features"
+#~ msgstr "قابلیت ها"
+
+#~ msgctxt "fenjoon"
+#~ msgid "Modules"
+#~ msgstr "ماژول ها"
+
+#~ msgctxt "fenjoon"
+#~ msgid "Module"
+#~ msgstr "ماژول"
+
+#~ msgctxt "fenjoon"
+#~ msgid "Projects"
+#~ msgstr "پروژه ها"
+
+#~ msgctxt "fenjoon"
+#~ msgid "Project"
+#~ msgstr "پروژه"

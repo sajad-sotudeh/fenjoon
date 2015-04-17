@@ -89,13 +89,13 @@ li.row .left{
     transition: all 0.3s ease-out 0s;
 }
 .checkbox-switch .checkbox-off {
-	margin-left: 32px;
+	margin-left: 45px;
 	opacity: 1;
 }
 .checkbox-switch .checkbox-on {
 	display: none;
 	float: right;
-	margin-right: 35px;
+	margin-right: 40px;
 	opacity: 0;
 }
 .checkbox-switch input.chkswchipt:checked + .checkbox-animate .checkbox-off {
