@@ -494,4 +494,140 @@ function last_change_by( $post ){
 }
 add_action( 'add_meta_boxes', 'add_order_to_project_metabox', 0 );
 
-?>
+
+
+
+// Add options
+//******************************************
+
+if( is_admin() ){
+	
+   
+    
+   function my_plugin_menu()
+    {
+        
+             add_options_page(
+                'Settings Admin', 
+                __( 'My Options','fenjoon'), 
+                'manage_options', 
+                'my-setting-admin', 
+                'create_admin_page' 
+        );
+    }
+	
+	
+    add_action( 'admin_menu',  'my_plugin_menu' );
+	
+    function create_admin_page()
+    {
+       
+        ?>
+        <div class="wrap">
+                
+            <form method="post" action="options.php">
+            <?php
+                settings_fields( 'my_options_group' );   
+                do_settings_sections('my-setting-admin');
+                submit_button(); 
+            ?>
+            </form>
+        </div>
+        <?php
+    }
+
+  
+    function register_mysetting()
+    {        
+             register_setting(
+               'my_options_group', 
+               'my options', 
+               'sanitize' 
+             );
+
+             add_settings_section(
+               'setting_section_id',
+               'My Option Settings', 
+               'print_display_section' , 
+               'my-setting-admin' 
+             );  
+
+             add_settings_field(
+                'id_Worker', 
+               __( 'Number_Pepole','fenjoon' ), 
+                'Number_Pepole_callback' , 
+                'my-setting-admin', 
+                'setting_section_id'         
+             );      
+
+             add_settings_field(
+                'id_price_work_time', 
+                __( 'price_work_time','fenjoon' ), 
+                'price_work_time_callback', 
+                'my-setting-admin', 
+                'setting_section_id'
+             );  
+             add_settings_field(
+               'id_work_time', 
+                __( 'work_time','fenjoon' ), 
+               'work_time_callback', 
+               'my-setting-admin', 
+               'setting_section_id'
+             ); 		
+    }
+   add_action( 'admin_init','register_mysetting' );
+    
+   function sanitize( $input )
+    {
+        $new_input = array();
+        if( isset( $input['id_Worker'] ) )
+            $new_input['id_Worker'] = absint( $input['id_Worker'] );
+
+        if( isset( $input['id_price_work_time'] ) )
+            $new_input['id_price_work_time'] = absint ($input['id_price_work_time'] );
+		
+       if( isset( $input['id_work_time'] ) )
+            $new_input['id_work_time'] = absint( $input['id_work_time'] );
+       return $new_input;
+    }
+
+    
+    function print_display_section()
+    {
+       
+    }
+
+    /** 
+     * Get the settings option array and print one of its values
+     */
+    function Number_Pepole_callback()
+    {
+	 $options=get_option('my options');
+      echo(
+            '<input type="text" id="id_Worker" name="my options[id_Worker]" value="'.esc_attr( $options['id_Worker']) .'" />'
+
+        );
+    }
+
+    /** 
+     * Get the settings option array and print one of its values
+     */
+    function price_work_time_callback()
+    {
+		$options=get_option('my options');
+        echo(
+            '<input type="text" id="id_price_work_time" name="my options[id_price_work_time]" value="'. esc_attr($options['id_price_work_time']).'" />'
+        );
+    }
+
+function work_time_callback()
+    {
+		$options=get_option('my options');
+        echo(
+            '<input type="text" id="id_work_time" name="my options[id_work_time]" value="'. esc_attr($options['id_work_time']).'" />'
+        );
+    }
+	
+} else {
+	echo 'not permission';
+}
