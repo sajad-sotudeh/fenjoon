@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Fenjoon\n"
-"POT-Creation-Date: 2015-04-18 01:31+0330\n"
-"PO-Revision-Date: 2015-04-18 01:31+0330\n"
+"POT-Creation-Date: 2015-04-18 03:22+0330\n"
+"PO-Revision-Date: 2015-04-18 03:39+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -19,103 +19,108 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: functions.php:32 functions.php:34
-msgid "Sitetypes"
-msgstr "انواع وبسایت"
+#: functions.php:32 functions.php:34 functions.php:47
+msgid "Site Types"
+msgstr "نوع سایت ها"
 
 #: functions.php:33
-msgid "Sitetype"
+msgid "Site Type"
 msgstr "نوع سایت"
 
 #: functions.php:35
-msgid "Parent Sitetype"
-msgstr "نوع وبسایت مادر"
+msgid "Parent Site Type"
+msgstr "نوع سایت مادر"
 
 #: functions.php:36
-msgid "All Sitetypes"
-msgstr "همه انواع وبسایت"
+msgid "All Site Types"
+msgstr "همه نوع سایت ها"
 
 #: functions.php:37
-msgid "View Sitetypes"
-msgstr "مشاهده انواع وبسایت"
+msgid "View Site Type"
+msgstr "مشاهده نوع سایت"
 
 #: functions.php:38
-msgid "Add New Sitetype"
-msgstr "افزودن نوع وبسایت"
+msgid "Add New Site Type"
+msgstr "افزودن نوع سایت"
 
 #: functions.php:39 functions.php:83 functions.php:127 functions.php:171
+#: functions.php:215
 msgid "Add New"
 msgstr "افزودن"
 
 #: functions.php:40
-msgid "Edit Sitetype"
-msgstr "ویرایش نوع وبسایت"
+msgid "Edit Site Type"
+msgstr "ویرایش "
 
 #: functions.php:41
-msgid "Update Sitetype"
-msgstr "به روزرسانی نوع وبسایت"
+msgid "Update Site Type"
+msgstr "به روز رسانی نوع سایت"
 
 #: functions.php:42
-msgid "Search Sitetype"
-msgstr "جستجوی نوع وبسایت"
+msgid "Search Site Types"
+msgstr "جستجوی نوع سایت"
 
 #: functions.php:43 functions.php:87 functions.php:131 functions.php:175
-#: functions.php:272 functions.php:312
+#: functions.php:219 functions.php:408 functions.php:448
 msgid "Not found"
 msgstr "یافت نشد"
 
 #: functions.php:44 functions.php:88 functions.php:132 functions.php:176
-#: functions.php:273 functions.php:313
+#: functions.php:220 functions.php:409 functions.php:449
 msgid "Not found in Trash"
 msgstr "در زباله دان یافت نشد"
-
-#: functions.php:47
-msgid "sitetypes"
-msgstr "انواع وبسایت"
 
 #: functions.php:48
 msgid "Different site types, our team may design and develop"
 msgstr "انواع مختلف وبسایت که تیم ما قادر به طراحی آن است"
 
-#: functions.php:76 functions.php:77 functions.php:78 functions.php:91
-msgid "Attributes"
-msgstr "ویژگی ها"
+#: functions.php:76 functions.php:78 functions.php:91
+msgid "Modules"
+msgstr "ماژول ها"
+
+#: functions.php:77
+msgid "Module"
+msgstr "ماژول"
 
 #: functions.php:79
-msgid "Parent Attribute"
-msgstr "ویژگی مادر"
+msgid "Parent Module"
+msgstr "ماژول مادر"
 
 #: functions.php:80
-msgid "All Attributes"
-msgstr "همه ویژگی ها"
+msgid "All Modules"
+msgstr "همه ماژول ها"
 
 #: functions.php:81
-msgid "View Attributes"
-msgstr "مشاهده ویژگی ها"
+msgid "View Module"
+msgstr "مشاهده ماژول"
 
 #: functions.php:82
-msgid "Add New Attribute"
-msgstr "افزودن ویژگی"
+msgid "Add New Module"
+msgstr "افزودن ماژول"
 
 #: functions.php:84
-msgid "Edit Attribute"
-msgstr "ویرایش ویژگی"
+msgid "Edit Module"
+msgstr "ویرایش ماژول"
 
 #: functions.php:85
-msgid "Update Attributes"
-msgstr "به روز رسانی ویژگی"
+msgid "Update Module"
+msgstr "به روز رسانی ماژول"
 
 #: functions.php:86
-msgid "Search Attributes"
-msgstr "جستجوی ویژگی ها"
+msgid "Search Modules"
+msgstr "جستجوی ماژول ها"
 
 #: functions.php:92
-msgid "Different Attributes, our team may design and develop"
-msgstr "ویژگی های محتلفی که تیم ما قادر به پیاده سازی آن است"
+msgid "Different Modules, our team may design and develop"
+msgstr "ماژول های مختلف که تیم ما قادر به پیاده سازی آن است"
 
-#: functions.php:120 functions.php:121 functions.php:122 functions.php:135
+#: functions.php:120 functions.php:122 functions.php:135
 msgid "Features"
 msgstr "قابلیت ها"
+
+#: functions.php:121
+msgid "Feature"
+msgstr "قابلیت"
 
 #: functions.php:123
 msgid "Parent Feature"
@@ -126,8 +131,8 @@ msgid "All Features"
 msgstr "همه قابلیت ها"
 
 #: functions.php:125
-msgid "View Features"
-msgstr "مشاهده قابلیت ها"
+msgid "View Feature"
+msgstr "مشاهده قابلیت"
 
 #: functions.php:126
 msgid "Add New Feature"
@@ -142,197 +147,253 @@ msgid "Update Feature"
 msgstr "به روز رسانی قابلیت"
 
 #: functions.php:130
-msgid "Search Feature"
-msgstr "جستجوی قابلیت"
+msgid "Search Features"
+msgstr "جستجوی قابلیت ها"
 
 #: functions.php:136
 msgid "Different Features, our team may design and develop"
 msgstr "قابلیت های محتلف که تیم ما قادر به پیاده سازی آن است"
 
 #: functions.php:164 functions.php:166 functions.php:179
-msgid "Modules"
-msgstr "ماژول ها"
+msgid "Attributes"
+msgstr "ویژگی ها"
 
 #: functions.php:165
-msgid "Module"
-msgstr "ماژول"
+msgid "Attribute"
+msgstr "ویژگی"
 
 #: functions.php:167
-msgid "Parent Module"
-msgstr "ماژول مادر"
+msgid "Parent Attribute"
+msgstr "ویژگی مادر"
 
 #: functions.php:168
-msgid "All Modules"
-msgstr "همه ماژول ها"
+msgid "All Attributes"
+msgstr "همه ویژگی ها"
 
 #: functions.php:169
-msgid "View Modules"
-msgstr "مشهده ماژول ها"
+msgid "View Attribute"
+msgstr "مشاهده ویژگی"
 
 #: functions.php:170
-msgid "Add New Module"
-msgstr "افزودن ماژول"
+msgid "Add New Attribute"
+msgstr "افزودن ویژگی"
 
 #: functions.php:172
-msgid "Edit Module"
-msgstr "ویرایش ماژول"
+msgid "Edit Attribute"
+msgstr "ویرایش ویژگی"
 
 #: functions.php:173
-msgid "Update Module"
-msgstr "به روز رسانی ماژول"
+msgid "Update Attribute"
+msgstr "به روز رسانی ویژگی"
 
 #: functions.php:174
-msgid "Search Module"
-msgstr "جستجوی ماژول"
+msgid "Search Attributes"
+msgstr "جستجوی ویژگی ها"
 
 #: functions.php:180
-msgid "Different Modules, our team may design and develop"
-msgstr "ماژول های مختلف که تیم ما قادر به پیاده سازی آن است"
+msgid "Different Attributes, our team may design and develop"
+msgstr "ویژگی های محتلفی که تیم ما قادر به پیاده سازی آن است"
+
+#: functions.php:208 functions.php:210 functions.php:223
+msgid "Standards"
+msgstr "استانداردها"
+
+#: functions.php:209
+msgid "Standard"
+msgstr "استاندارد"
+
+#: functions.php:211
+msgid "Parent Standard"
+msgstr "استاندارد مادر"
+
+#: functions.php:212
+msgid "All Standards"
+msgstr "همه استانداردها"
+
+#: functions.php:213
+msgid "View Standard"
+msgstr "مشاهده استاندارد"
+
+#: functions.php:214
+msgid "Add New Standard"
+msgstr "افزودن استاندارد"
 
 #: functions.php:216
+msgid "Edit Standard"
+msgstr "ویرایش استاندارد"
+
+#: functions.php:217
+msgid "Update Standard"
+msgstr "به روز رسانی استاندارد"
+
+#: functions.php:218
+msgid "Search Standards"
+msgstr "جستجوی استانداردها"
+
+#: functions.php:224
+msgid "Different Standards, our team may design and develop"
+msgstr "استانداردهای مختلفی که تیم ما قادر به پیاده سازی و رعایت آن است"
+
+#: functions.php:260
 msgid "Select child "
 msgstr "جستجوی فرزند"
 
-#: functions.php:262 functions.php:264 functions.php:276
+#: functions.php:309
+msgid "Workforce Metabox"
+msgstr "نیروی کار لازم"
+
+#: functions.php:321
+msgid "Workforce needed (Man-Hour)"
+msgstr "نیروی کار لازم (نفر ساعت)"
+
+#: functions.php:353
+msgid "Workforce Multi Metabox"
+msgstr "ضریب افزایش نیروی کار"
+
+#: functions.php:365
+msgid "Workforce multiplier needed (Man-Hour)"
+msgstr "ضریب افزایش نیروی کار لازم ( از 1 تا 2 )"
+
+#: functions.php:398 functions.php:400 functions.php:412
 msgid "Orders"
 msgstr "سفارش ها"
 
-#: functions.php:263
+#: functions.php:399
 msgid "Order"
 msgstr "سفارش"
 
-#: functions.php:265
+#: functions.php:401
 msgid "All Orders"
 msgstr "همه سفارش ها"
 
-#: functions.php:266
-msgid "View Orders"
-msgstr "مشاهده سفارش ها"
+#: functions.php:402
+msgid "View Order"
+msgstr "مشاهده سفارش"
 
-#: functions.php:267
+#: functions.php:403
 msgid "Add a New Order"
 msgstr "افزودن سفارش"
 
-#: functions.php:268 functions.php:308
+#: functions.php:404 functions.php:444
 msgid "Add a New"
 msgstr "افزودن"
 
-#: functions.php:269
+#: functions.php:405
 msgid "Edit Order"
 msgstr "ویرایش سفارش"
 
-#: functions.php:270
+#: functions.php:406
 msgid "Update Order"
 msgstr "به روز رسانی سفارش"
 
-#: functions.php:271
-msgid "Search Order"
-msgstr "جستجوی سفارش"
+#: functions.php:407
+msgid "Search Orders"
+msgstr "جستجوی سفارش ها"
 
-#: functions.php:277
+#: functions.php:413
 msgid "The requests which are submitted known as ORDERS!"
 msgstr "سفارش هایی که به تیم ما ارائه میشود"
 
-#: functions.php:302 functions.php:304 functions.php:316
+#: functions.php:438 functions.php:440 functions.php:452
 msgid "Projects"
 msgstr "پروژه ها"
 
-#: functions.php:303
+#: functions.php:439
 msgid "Project"
 msgstr "پروژه"
 
-#: functions.php:305
+#: functions.php:441
 msgid "All Projects"
 msgstr "همه پروژه ها"
 
-#: functions.php:306
+#: functions.php:442
 msgid "View Project"
 msgstr "مشاهده پروژه"
 
-#: functions.php:307
+#: functions.php:443
 msgid "Add a New Project"
 msgstr "افزودن پروژه"
 
-#: functions.php:309
+#: functions.php:445
 msgid "Edit Project"
 msgstr "ویرایش پروژه"
 
-#: functions.php:310
+#: functions.php:446
 msgid "Update Project"
 msgstr "به روز رسانی پروژه"
 
-#: functions.php:311
-msgid "Search Project"
-msgstr "جستجوی پروژه"
+#: functions.php:447
+msgid "Search Projects"
+msgstr "جستجوی پروژه ها"
 
-#: functions.php:317
+#: functions.php:453
 msgid "The Projects which are submitted known as Projects!"
 msgstr "پروژه هایی که از یک سفارش ایجاد میشوند"
 
-#: functions.php:346
+#: functions.php:482
 msgid "Submitted Choices selected by Costumer"
 msgstr "گزینه های انتخاب شده توسط مشتری"
 
-#: functions.php:421
+#: functions.php:557
 msgid "Project "
 msgstr "پروژه"
 
-#: functions.php:447
+#: functions.php:583
 msgid "Start its Project now!"
 msgstr "پروژه این سفارش را ایجاد کنید!"
 
-#: functions.php:458
+#: functions.php:594
 msgid "Last changes of this order"
 msgstr "آخرین تغییرات اعمال شده"
 
-#: functions.php:471
+#: functions.php:607
 msgid "Edit Project No. "
 msgstr "ویرایش پروژه شماره "
 
-#: functions.php:473
+#: functions.php:609
 msgid ""
 "Please note that this is a ONE TIME start and your changes are irreversible!"
 msgstr ""
 "لطفا توجه داشته باشید که این تغییر تنها یک بار اتفاق می افتد و غیر قابل "
 "بازگشت است. با اطمینان کامل تغییر دهید!"
 
-#: functions.php:478
+#: functions.php:614
 msgid "Project Started"
 msgstr "پروژه آغاز شد"
 
-#: functions.php:479
+#: functions.php:615
 msgid "Change to Project"
 msgstr "ایجاد یک پروژه"
 
-#: functions.php:520 functions.php:521
+#: functions.php:656 functions.php:657
 msgid "Fenjoon Settings"
 msgstr "تنظیمات فنجون"
 
-#: functions.php:551
+#: functions.php:687
 msgid "Work Force Settings"
 msgstr "تنظیمات نیروی کار"
 
-#: functions.php:558
+#: functions.php:694
 msgid "Developers Count"
 msgstr "تعداد نفرات توسعه دهنده"
 
-#: functions.php:566
+#: functions.php:702
 msgid "Man-Hour Fee"
 msgstr "هزینه هر نفر ساعت کار"
 
-#: functions.php:574
+#: functions.php:710
 msgid "Daily Work Hours"
 msgstr "ساعت کار روزانه"
 
-#: functions.php:623
+#: functions.php:759
 msgid "NO Permission"
 msgstr "شما دسترسی کافی برای دیدن این بخش را ندارید!"
 
-#: functions.php:635
+#: functions.php:771
 msgid "Project Progress"
 msgstr "چک لیست پیشرفت پروژه"
 
-#: functions.php:643
+#: functions.php:779
 msgid "Last changes of this Project"
 msgstr "آخرین تغییرات اعمال شده"
 
@@ -343,43 +404,3 @@ msgstr "بیشتر"
 #: index.php:11
 msgid "Sorry, no posts matched your criteria."
 msgstr "متاسفانه هیچ ارسالی با این مشخصات یافت نشد"
-
-#~ msgctxt "fenjoon"
-#~ msgid "Orders"
-#~ msgstr "سفارش ها"
-
-#~ msgctxt "fenjoon"
-#~ msgid "Order"
-#~ msgstr "سفارش"
-
-#~ msgctxt "fenjoon"
-#~ msgid "Sitetypes"
-#~ msgstr "انواع وبسایت"
-
-#~ msgctxt "fenjoon"
-#~ msgid "Sitetype"
-#~ msgstr "نوع وبسایت"
-
-#~ msgctxt "fenjoon"
-#~ msgid "Attributes"
-#~ msgstr "ویژگی ها"
-
-#~ msgctxt "fenjoon"
-#~ msgid "Features"
-#~ msgstr "قابلیت ها"
-
-#~ msgctxt "fenjoon"
-#~ msgid "Modules"
-#~ msgstr "ماژول ها"
-
-#~ msgctxt "fenjoon"
-#~ msgid "Module"
-#~ msgstr "ماژول"
-
-#~ msgctxt "fenjoon"
-#~ msgid "Projects"
-#~ msgstr "پروژه ها"
-
-#~ msgctxt "fenjoon"
-#~ msgid "Project"
-#~ msgstr "پروژه"
