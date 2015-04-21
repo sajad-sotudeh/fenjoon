@@ -2,6 +2,7 @@
 //******************************************
 // Basic Setup
 //******************************************
+
 function fenjoon_setup(){
 	// Make fenjoon available for translation.
 	load_theme_textdomain('fenjoon', get_template_directory().'/lang');
@@ -511,9 +512,11 @@ function order_list( $post ){
 <?php
 		}
 	}
-	wp_reset_postdata();?>
+	wp_reset_postdata();
+	?>
 	<input type="hidden" name="string" value="<?php echo $order_str;?>"/>
 <?php
+wp_reset_query();
 }
 add_action( 'add_meta_boxes', 'add_order_list_metabox', 0 );
 
@@ -541,7 +544,10 @@ function save_order_list() {
 	if( count( $changes_arr ) == 5 ) {array_shift( $changes_arr );};
 	global $current_user;
 	$change_str = $current_user->ID;
-	$date_info = jdate( 'h:i - j F Y', strtotime( get_the_modified_date() ) );
+	if (!function_exists('jdate')) ////this function use to specify that jdata plugin is active or not
+	$date_info = date('h:i - j F Y ');////if jdate isnot active we show the data in gregorian calender
+	else
+	$date_info = jdate( 'h:i - j F Y', strtotime( get_the_modified_date() ) );///else we show the date in jalai by jdate plugin
 	$change_str = $change_str.'*'.$date_info;
 	array_push( $changes_arr, $change_str );
 	$changes_str = implode( "+", $changes_arr );
@@ -829,7 +835,7 @@ function save_project_list(){
 	}
 // Project list metabox
 	$progress_str = $_POST['string'];
-	if( $progress_str ) update_post_meta( $post_id, 'progress_str', $progress_str );
+	//if( $progress_str ) update_post_meta( $post_id, 'progress_str', $progress_str );
 
 // Project last changes metabox
 	$changes_str = get_post_meta( $post_id, 'changes_str', 1 );
@@ -839,7 +845,10 @@ function save_project_list(){
 	if( count( $changes_arr ) == 5 ) {array_shift( $changes_arr );};
 	global $current_user;
 	$change_str = $current_user->ID;
-	$date_info = jdate( 'h:i - j F Y', strtotime( get_the_modified_date() ) );
+	if (!function_exists('jdate')) //this function use to specify that jdata plugin is active or not
+	$date_info = date('h:i - j F Y');//if jdate isnot active we show the data in gregorian calender
+	else
+	$date_info = jdate( 'h:i - j F Y', strtotime( get_the_modified_date() ) );//else we show the date in jalai by jdate plugin
 	$change_str = $change_str.'*'.$date_info;
 	array_push( $changes_arr, $change_str );
 	$changes_str = implode( "+", $changes_arr );
