@@ -544,7 +544,7 @@ function save_order_list() {
 	if( count( $changes_arr ) == 5 ) {array_shift( $changes_arr );};
 	global $current_user;
 	$change_str = $current_user->ID;
-	if (!function_exists('jdate')) ////this function use to specify that jdata plugin is active or not
+	if ( ! is_plugin_active('wp-jalali/wp-jalali.php')) ////this function use to specify that jdata plugin is active or not
 	$date_info = date('h:i - j F Y ');////if jdate isnot active we show the data in gregorian calender
 	else
 	$date_info = jdate( 'h:i - j F Y', strtotime( get_the_modified_date() ) );///else we show the date in jalai by jdate plugin
@@ -845,7 +845,7 @@ function save_project_list(){
 	if( count( $changes_arr ) == 5 ) {array_shift( $changes_arr );};
 	global $current_user;
 	$change_str = $current_user->ID;
-	if (!function_exists('jdate')) //this function use to specify that jdata plugin is active or not
+	if ( !is_plugin_active('wp-jalali/wp-jalali.php')) //this function use to specify that jdata plugin is active or not
 	$date_info = date('h:i - j F Y');//if jdate isnot active we show the data in gregorian calender
 	else
 	$date_info = jdate( 'h:i - j F Y', strtotime( get_the_modified_date() ) );//else we show the date in jalai by jdate plugin
