@@ -3,10 +3,9 @@
 // Basic Setup
 //******************************************
 function fenjoon_setup(){
-	// Make fenjoon available for translation.
 	load_theme_textdomain('fenjoon', get_template_directory().'/lang');
-	// Add support for thumbnails
 	add_theme_support( 'post-thumbnails' );
+	add_theme_support( 'menus' );
 }
 add_action( 'after_setup_theme', 'fenjoon_setup' );
 
