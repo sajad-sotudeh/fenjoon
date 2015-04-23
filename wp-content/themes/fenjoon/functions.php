@@ -510,29 +510,25 @@ function save_order_owner_metabox(){
 	if( $order_owner_id ){
 		$args = array(
 			'ID' 						=> $post_id,
-			'post_title'    => $post->post_title,
-			'post_content'  => $post->post_content,
 			'post_author' 	=> $order_owner_id,
 			'post_type' 		=> 'orders',
 			'post_status'		=> 'publish'
 		);
-		remove_action( 'post_updated', 'save_order_owner_metabox' );
-		wp_insert_post( $args );
+		remove_action( 'save_post', 'save_order_owner_metabox' );
+		wp_update_post( $args );
 		$project_id = get_post_meta( $post_id, 'project_id', 1 );
 		if( !empty( $project_id ) ){
 			$args = array(
 				'ID' 						=> $project_id,
-				'post_title'    => get_post_field( 'post_title', $project_id ),
-				'post_content'  => get_post_field( 'post_content', $project_id ),
 				'post_author' 	=> $order_owner_id,
 				'post_type' 		=> 'projects',
 				'post_status'		=> 'publish'
 			);
-			wp_insert_post( $args );
+			wp_update_post( $args );
 		}
 	}
 }
-add_action( 'post_updated', 'save_order_owner_metabox' );
+add_action( 'save_post', 'save_order_owner_metabox' );
 
 //******************************************
 // Add order list to Order page
