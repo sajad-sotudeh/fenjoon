@@ -1,12 +1,15 @@
+li.section{
+	margin: 0;
+}
 .section_title{
-  margin-bottom: 8px;
+  margin-bottom: 0;
   padding: 3px 10px 5px;
 	background-color: #0074A2;
   color: #efefef;
 }
 li.item{
 	margin: 0;
-	padding: 3px;
+	padding: 8px 0px 10px;
 }
 li.item.added{
 	background-color: #ccffcc;
@@ -14,6 +17,20 @@ li.item.added{
 li.item.removed{
 	background-color: #ffcccc;
 }
+li.item span.progress{
+	margin: 0;
+  padding: 9px 10px 11px 10px;
+	background-color: #F9EC00;
+}
+li.item span.done{
+	margin: 0;
+  padding: 9px 10px 11px 10px;
+	background-color: #23F900;
+}
+li.item span input{
+	margin:0;
+}
+
 ul.listofrows{
 	overflow: hidden;
 }
