@@ -910,7 +910,11 @@ function project_list( $post ){
 		wp_reset_query();?>
 		<div class="legend">
 			<ul>
-				
+				<li class="item"><span class="progress"><input type="checkbox"><?php _e('In Progress', 'fenjoon');?></span></li>
+				<li class="item"><span class="done"><input type="checkbox"><?php _e('Done', 'fenjoon');?></span></li>
+				<li class="item text"><?php _e('Still in order', 'fenjoon');?></li>
+				<li class="item text added"><?php _e('Added to order', 'fenjoon');?></li>
+				<li class="item text removed"><?php _e('Removed from order', 'fenjoon');?></li>
 			</ul>
 		</div>
 		<ul><?php
