@@ -1,0 +1,108 @@
+div.added{
+	font-weight:bold;
+	background-color: #ccffcc;
+}
+div.removed{
+	font-weight:bold;
+	background-color: #ffcccc;
+}
+ul.listofrows{
+	overflow: hidden;
+}
+li.row{
+	clear: both;
+	overflow: hidden;
+}
+li.row .right{
+	float: right;
+}
+li.row .left{
+	float: left;
+}
+#order-to-project-switch{
+	text-align:center;
+	padding:50px 0;
+	height: 30px;
+}
+.checkbox-switch {
+	cursor: pointer;
+	display: inline-block;
+	overflow: hidden;
+	position: relative;
+	text-align: left;
+	width: 170px;
+	height: 30px;
+	-webkit-border-radius: 30px;
+	border-radius: 30px;
+	line-height: 1.2;
+	font-size: 14px;
+}
+.checkbox-switch input.chkswchipt {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 170px;
+	height: 30px;
+	padding: 0;
+	margin: 0;
+	opacity: 0;
+	z-index: 2;
+	cursor: pointer;
+}
+.checkbox-switch .checkbox-animate {
+    position: relative;
+    width: 170px;
+    height: 30px;
+    background-color: #95a5a6;
+    -webkit-transition: background 0.25s ease-out 0s;
+    transition: background 0.25s ease-out 0s;
+}
+.checkbox-switch .checkbox-animate:before {
+	content: "";
+	display: block;
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #7f8c8d;
+	top: 5px;
+	left: 5px;
+	 -webkit-transition: left 0.3s ease-out 0s;
+    transition: left 0.3s ease-out 0s;
+    z-index: 10;
+}
+.checkbox-switch input.chkswchipt:checked + .checkbox-animate {
+	background-color: #2ecc71;
+}
+.checkbox-switch input.chkswchipt:checked + .checkbox-animate:before {
+	left: 145px;
+	background-color: #27ae60;
+}
+.checkbox-switch .checkbox-off,
+.checkbox-switch .checkbox-on {
+	float: left;
+	color: #fff;
+	font-weight: 700;
+	padding-top: 6px;
+	 -webkit-transition: all 0.3s ease-out 0s;
+    transition: all 0.3s ease-out 0s;
+}
+.checkbox-switch .checkbox-off {
+	margin-left: 45px;
+	opacity: 1;
+}
+.checkbox-switch .checkbox-on {
+	display: none;
+	float: right;
+	margin-right: 40px;
+	opacity: 0;
+}
+.checkbox-switch input.chkswchipt:checked + .checkbox-animate .checkbox-off {
+	display: none;
+	opacity: 0;
+}
+.checkbox-switch input.chkswchipt:checked + .checkbox-animate .checkbox-on {
+	display: block;
+	opacity: 1;
+}
