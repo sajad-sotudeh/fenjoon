@@ -6,26 +6,26 @@ Template Name: order
 get_header(); ?>
 
 <script>
-function get_string(){
-	var checkboxes = document.getElementsByClassName('checkbox');
-	var string = '';
-	var array = new Array();
-	for(var j=0;j<checkboxes.length;j++){
-		if (checkboxes[j].checked) array.push(checkboxes[j].value);
+	function get_string(){
+			var checkboxes = document.getElementsByClassName('checkbox');
+			var string = '';
+			var array = new Array();
+			for(var j=0;j<checkboxes.length;j++){
+				if (checkboxes[j].checked) array.push(checkboxes[j].value);
+			}
+			string = array.join('+');
+			return string;
 	}
-	string = array.join('+');
-	return string;
-}
-window.onload = function(){
-	var checkboxes = document.getElementsByClassName('checkbox');
-	var string = get_string();
-	for(var i=0;i<checkboxes.length;i++){
-		checkboxes[i].onclick = function(){
-			string = get_string();
-			document.getElementsByName('string')[0].setAttribute('value', string);
-		}
+	window.onload = function(){
+			var checkboxes = document.getElementsByClassName('checkbox');
+			var string = get_string();
+			for(var i=0;i<checkboxes.length;i++){
+				checkboxes[i].onclick = function(){
+					string = get_string();
+					document.getElementsByName('string')[0].setAttribute('value', string);
+				}
+			}
 	}
-}
 </script>
 
 <?php if ( is_user_logged_in() ) 
@@ -48,22 +48,39 @@ $args = array( 'post_type' => array( 'sitetypes', 'modules', 'features', 'attrib
 			}
 	
 	}
+	
 	}
 	while ( $the_query->have_posts() ) {
 			$the_query->the_post();?>
 			<input class="checkbox" type="checkbox" name="post-<?php the_ID();?>" value="<?php echo the_ID();?>" <?php echo (in_array( get_the_ID(), $order_arr ) ? 'checked' : '');echo (in_array( get_the_ID(), $progress_arr ) ? ' disabled' : ''); ?> /><?php the_title();?><br/>
 <?php	}?>
                         
-	
-						
-<button class="button"  onclick="save_list_order()">Send</button>
+	<form action="" method="post">		
+	<input type="hidden" name="string" value="<?php echo $order_str;?>"/>			
+	<input type="submit">
+	</form>
 
-<input type="show" name="string" value="<?php echo $order_str;?>"/>
+ <?php
 
-<?php
-update_post_meta( $post_id, 'string', $string );	
+	function new_order_post() {
+
+		$post_id = wp_insert_post(
+			array(
+				'comment_status'	=>	'closed',
+				'ping_status'		=>	'closed',
+				'post_author'		=>	$current_user->user_login,
+				'post_name'			=>	$user_ID ,
+				'post_title'		=>	$user_ID ,
+				'post_status'		=>	'publish',
+				'post_type'			=>	'orders'
+			)
+			);
+
+	}
+add_filter( 'template_redirect', 'new_order_post' );
+var_dump (new_order_post());
+
 ?>
-
 
 <div id="content" class="widecolumn">
     <?php if (have_posts()) : while (have_posts()) : the_post();?>
