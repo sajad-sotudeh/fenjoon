@@ -12,7 +12,7 @@ li.item{
 	padding: 5px 0px 7px;
 }
 li.item.added{
-	background-color: #ccffcc;
+	background-color: #C5E0F5;
 }
 li.item.removed{
 	background-color: #ffcccc;
@@ -33,7 +33,7 @@ li.item span input{
 .legend ul{
   border: 1px solid #ababab;
   display: inline-block;
-  padding: 2px 5px;
+  padding: 0 3px;
   margin: 0;
 }
 .legend li.item{
