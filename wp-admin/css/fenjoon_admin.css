@@ -9,28 +9,44 @@ li.section{
 }
 li.item{
 	margin: 0;
-	padding: 8px 0px 10px;
+	padding: 5px 0px 7px;
 }
 li.item.added{
-	background-color: #ccffcc;
+	background-color: #C5E0F5;
 }
 li.item.removed{
 	background-color: #ffcccc;
 }
 li.item span.progress{
 	margin: 0;
-  padding: 9px 10px 11px 10px;
+  padding: 6px 2px 8px 2px;
 	background-color: #F9EC00;
 }
 li.item span.done{
 	margin: 0;
-  padding: 9px 10px 11px 10px;
+  padding: 6px 2px 8px 2px;
 	background-color: #23F900;
 }
 li.item span input{
-	margin:0;
+	margin:0 5px;
 }
-
+.legend ul{
+  border: 1px solid #ababab;
+  display: inline-block;
+  padding: 0 3px;
+  margin: 0;
+}
+.legend li.item{
+	display: inline-block;
+	padding: 8px 0 10px 0;
+}
+.legend li.item.text{
+	padding: 5px 10px 7px;
+}
+.legend li.item span.progress, .legend li.item span.done{
+	padding-left: 10px;
+}
+/******************************************************************/
 ul.listofrows{
 	overflow: hidden;
 }
