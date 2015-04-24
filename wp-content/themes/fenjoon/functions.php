@@ -549,7 +549,7 @@ function add_order_list_metabox(){
 	}
 }
 
-function order_list(){
+function order_list( $post ){
 	$order_list = array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' );
 	$args = array( 'post_type' => $order_list, 'orderby' => 'menu_order', 'posts_per_page' => -1 );
 	$the_query = new WP_Query( $args );
