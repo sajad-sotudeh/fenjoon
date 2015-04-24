@@ -550,9 +550,10 @@ function add_order_list_metabox(){
 }
 
 function order_list( $post ){
-	$args = array( 'post_type' => array( 'sitetype', 'module', 'feature', 'attribute', 'standard' ), 'orderby' => 'menu_order', 'posts_per_page' => -1 );
-	$the_query1 = new WP_Query( $args );
-	if ( $the_query1->have_posts() ) {
+	$order_list = array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' );
+	$args = array( 'post_type' => $order_list, 'orderby' => 'menu_order', 'posts_per_page' => -1 );
+	$the_query = new WP_Query( $args );
+	if ( $the_query->have_posts() ) {
 		wp_nonce_field(basename( __FILE__ ), 'save_order');
 		$order_str = get_post_meta( $post->ID, 'order_str', 1 );
 		$order_arr = array();
@@ -565,30 +566,34 @@ function order_list( $post ){
 				if( !empty( $progress_str ) ) $progress_arr = explode( '+', $progress_str );
 			}
 		}
-		$count=5;
-		for( $i = 0; $i < $count; $i++ ){
-			echo $args['post_type'][$i];?><br/>
-			<?php
-			$CPT_name = $args['post_type'][$i];
-			$parent = get_posts( array( 'post_type' => $CPT_name, 'posts_per_page' => -1 ) );
-            $parents = array();
-            foreach( $parent as $single ){
-				$children = get_children( $single->ID );  
-				if( isset($children) && !empty($children) && count($children) >= 1){
-					$parents[] = $single->ID;
-				}
-			}
-			$child = array('post_type' => $CPT_name, 'orderby' => 'name', 'order' => 'ASC', 'posts_per_page' => -1, 'post__not_in' => $parents );
-			$the_query2 = new WP_Query( $child );
-			while( $the_query2 -> have_posts() ){
-				$the_query2 -> the_post();?>
-				<ul>
-				<li><input class="checkbox" type="checkbox" name="post-<?php the_ID();?>" value="<?php echo the_ID();?>" <?php echo (in_array( get_the_ID(), $order_arr ) ? 'checked' : '');echo (in_array( get_the_ID(), $progress_arr ) ? ' disabled' : ''); ?> /><?php the_title();?><br/></li>
-				</ul>
-				<?php
-			}
-			wp_reset_postdata();		
+		$order_sections = array();
+		foreach( $order_list as $order_type){
+			$order_sections[ $order_type ] = array();
 		}
+		$parents = array();
+		global $post;
+		while( $the_query->have_posts() ){
+			$the_query->the_post();
+			if( 0 != $post->post_parent ) $parents[] = $post->post_parent;
+			$order_sections[ $post->post_type ][ $post->ID ] = $post->post_title;
+		}
+		wp_reset_postdata();?>
+		<ul><?php
+		foreach( $order_sections as $key => $order_section ){
+			$post_type = get_post_type_object( $key );
+			if( $post_type ){?>
+				<li>
+					<div class="section_title"><?php echo $post_type->label;?></div>
+					<ul><?php
+					foreach( $order_section as $choice_id => $choice_title ){
+						if( in_array( $choice_id, $parents ) ) continue;	?>
+						<li><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $order_arr ) ? 'checked' : '');echo (in_array( $choice_id, $progress_arr ) ? ' disabled' : ''); ?> /><?php echo $choice_title;?><br/></li><?php
+					}?>
+					</ul>
+				</li><?php
+			}
+		}?>
+		</ul><?php
 	}
 	?>
 	<input type="hidden" name="string" value="<?php echo $order_str;?>"/>
@@ -888,7 +893,7 @@ function project_list(){
 		if( !empty( $progress_str ) )	$progress_arr = explode( '+', $progress_str );
 		while ( $pl_query->have_posts() ) {
 			$pl_query->the_post();?>
-			<div <?php if( in_array( get_the_ID(), $added_arr ) ){ echo 'class="added"';}elseif( in_array( get_the_ID(), $removed_arr ) ){ echo 'class="removed"';}; ?>><input class="checkbox" type="checkbox" name="post-<?php the_ID();?>" value="<?php echo the_ID();?>" <?php echo (in_array( get_the_ID(), $progress_arr ) ? 'checked' : ''); if( in_array( get_the_ID(), $removed_arr ) ){ echo 'disabled';}; ?>/><?php the_title();?></div>
+			<div <?php if( in_array( get_the_ID(), $added_arr ) ){ echo 'class="added"';}elseif( in_array( get_the_ID(), $removed_arr ) ){ echo 'class="removed"';}; ?>><input class="checkbox" type="checkbox" name="post-<?php the_ID();?>" value="<?php the_ID();?>" <?php echo (in_array( get_the_ID(), $progress_arr ) ? 'checked' : ''); if( in_array( get_the_ID(), $removed_arr ) ){ echo 'disabled';}; ?>/><?php the_title();?></div>
 <?php
 		}
 	}

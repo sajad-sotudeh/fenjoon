@@ -1,3 +1,9 @@
+.section_title{
+  margin-bottom: 8px;
+  padding: 3px 10px 5px;
+	background-color: #0074A2;
+  color: #efefef;
+}
 div.added{
 	font-weight:bold;
 	background-color: #ccffcc;
