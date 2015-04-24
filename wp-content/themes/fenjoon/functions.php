@@ -582,12 +582,14 @@ function order_list( $post ){
 		foreach( $order_sections as $key => $order_section ){
 			$post_type = get_post_type_object( $key );
 			if( $post_type ){?>
-				<li>
+				<li class="section">
 					<div class="section_title"><?php echo $post_type->label;?></div>
 					<ul><?php
 					foreach( $order_section as $choice_id => $choice_title ){
 						if( in_array( $choice_id, $parents ) ) continue;	?>
-						<li class="item"><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $order_arr ) ? 'checked' : '');echo (in_array( $choice_id, $progress_arr ) ? ' disabled' : ''); ?> /><?php echo $choice_title;?><br/></li><?php
+						<li class="item">
+							<input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $order_arr ) ? 'checked' : '');echo (in_array( $choice_id, $progress_arr ) ? ' disabled' : ''); ?> /><?php echo $choice_title;?>
+						</li><?php
 					}?>
 					</ul>
 				</li><?php
@@ -873,7 +875,7 @@ function add_project_list_metabox(){
 }
 
 function project_list( $post ){
-	$order_list = array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' );
+	$project_list = array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' );
 	$project_id = $post->ID;
 	$order_id = get_post_meta( $project_id, 'order_id', 1 );
 	$order_str = get_post_meta( $order_id, 'order_str', 1 );
@@ -884,35 +886,45 @@ function project_list( $post ){
 	if( !empty( $project_str ) ) $project_arr = explode( '+', $project_str );
 	$removed_arr = array_diff( $project_arr, $order_arr );
 	$added_arr = array_diff( $order_arr, $project_arr );	
-	$args = array( 'post__in' => array_merge( $project_arr, $added_arr, $removed_arr ), 'post_type' => $order_list, 'orderby' => 'menu_order', 'posts_per_page' => -1 );
+	$args = array( 'post__in' => array_merge( $project_arr, $added_arr, $removed_arr ), 'post_type' => $project_list, 'orderby' => 'menu_order', 'posts_per_page' => -1 );
 	$the_query = new WP_Query( $args );
 	if ( $the_query->have_posts() ) {
 		wp_nonce_field(basename( __FILE__ ), 'save_project');
 		$progress_str = get_post_meta( $project_id, 'progress_str', 1 );
 		$progress_arr = array();
 		if( !empty( $progress_str ) )	$progress_arr = explode( '+', $progress_str );
-		$order_sections = array();
-		foreach( $order_list as $order_type){
-			$order_sections[ $order_type ] = array();
+		$done_str = get_post_meta( $project_id, 'done_str', 1 );
+		$done_arr = array();
+		if( !empty( $done_str ) )	$done_arr = explode( '+', $done_str );
+		$project_sections = array();
+		foreach( $project_list as $project_type){
+			$project_sections[ $project_type ] = array();
 		}
 		$parents = array();
 		global $post;
 		while( $the_query->have_posts() ){
 			$the_query->the_post();
 			if( 0 != $post->post_parent ) $parents[] = $post->post_parent;
-			$order_sections[ $post->post_type ][ $post->ID ] = $post->post_title;
+			$project_sections[ $post->post_type ][ $post->ID ] = $post->post_title;
 		}
 		wp_reset_query();?>
+		<div class="legend">
+			<ul>
+				
+			</ul>
+		</div>
 		<ul><?php
-		foreach( $order_sections as $key => $order_section ){
+		foreach( $project_sections as $key => $project_section ){
 			$post_type = get_post_type_object( $key );
 			if( $post_type ){?>
-				<li>
+				<li class="section">
 					<div class="section_title"><?php echo $post_type->label;?></div>
 					<ul><?php
-					foreach( $order_section as $choice_id => $choice_title ){
+					foreach( $project_section as $choice_id => $choice_title ){
 						if( in_array( $choice_id, $parents ) ) continue;	?>
-						<li class="item<?php if( in_array( $choice_id, $added_arr ) ){ echo ' added';}elseif( in_array( $choice_id, $removed_arr ) ){ echo ' removed';}; ?>"><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $progress_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /><?php echo $choice_title;?><br/></li><?php
+						<li class="item<?php if( in_array( $choice_id, $added_arr ) ){ echo ' added';}elseif( in_array( $choice_id, $removed_arr ) ){ echo ' removed';}; ?>"><span class="progress"><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $progress_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span><span class="done"><input class="checkbox_done" type="checkbox" name="post-done-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $done_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span>
+							<span class="title"><?php echo $choice_title;?></span>
+						</li><?php
 					}?>
 					</ul>
 				</li><?php
@@ -921,6 +933,7 @@ function project_list( $post ){
 		</ul><?php
 	}?>
 	<input type="hidden" name="string" value="<?php echo $progress_str;?>"/>
+	<input type="hidden" name="string_done" value="<?php echo $done_str;?>"/>
 <?php
 }
 add_action( 'add_meta_boxes', 'add_project_list_metabox', 0 );
@@ -938,6 +951,8 @@ function save_project_list(){
 // Project list metabox
 	$progress_str = $_POST['string'];
 	if( $progress_str ) update_post_meta( $post_id, 'progress_str', $progress_str );
+	$done_str = $_POST['string_done'];
+	if( $done_str ) update_post_meta( $post_id, 'done_str', $done_str );
 
 // Project last changes metabox
 	$changes_str = get_post_meta( $post_id, 'changes_str', 1 );
