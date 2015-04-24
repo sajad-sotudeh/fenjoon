@@ -587,7 +587,7 @@ function order_list( $post ){
 					<ul><?php
 					foreach( $order_section as $choice_id => $choice_title ){
 						if( in_array( $choice_id, $parents ) ) continue;	?>
-						<li><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $order_arr ) ? 'checked' : '');echo (in_array( $choice_id, $progress_arr ) ? ' disabled' : ''); ?> /><?php echo $choice_title;?><br/></li><?php
+						<li class="item"><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $order_arr ) ? 'checked' : '');echo (in_array( $choice_id, $progress_arr ) ? ' disabled' : ''); ?> /><?php echo $choice_title;?><br/></li><?php
 					}?>
 					</ul>
 				</li><?php
@@ -872,8 +872,8 @@ function add_project_list_metabox(){
 	}
 }
 
-function project_list(){
-	global $post;
+function project_list( $post ){
+	$order_list = array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' );
 	$project_id = $post->ID;
 	$order_id = get_post_meta( $project_id, 'order_id', 1 );
 	$order_str = get_post_meta( $order_id, 'order_str', 1 );
@@ -884,20 +884,42 @@ function project_list(){
 	if( !empty( $project_str ) ) $project_arr = explode( '+', $project_str );
 	$removed_arr = array_diff( $project_arr, $order_arr );
 	$added_arr = array_diff( $order_arr, $project_arr );	
-	$args = array( 'post__in' => array_merge( $project_arr, $added_arr, $removed_arr ), 'post_type' => array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' ), 'orderby' => 'menu_order', 'posts_per_page' => -1 );
-	$pl_query = new WP_Query( $args );
-	if ( $pl_query->have_posts() ) {
+	$args = array( 'post__in' => array_merge( $project_arr, $added_arr, $removed_arr ), 'post_type' => $order_list, 'orderby' => 'menu_order', 'posts_per_page' => -1 );
+	$the_query = new WP_Query( $args );
+	if ( $the_query->have_posts() ) {
 		wp_nonce_field(basename( __FILE__ ), 'save_project');
 		$progress_str = get_post_meta( $project_id, 'progress_str', 1 );
 		$progress_arr = array();
 		if( !empty( $progress_str ) )	$progress_arr = explode( '+', $progress_str );
-		while ( $pl_query->have_posts() ) {
-			$pl_query->the_post();?>
-			<div <?php if( in_array( get_the_ID(), $added_arr ) ){ echo 'class="added"';}elseif( in_array( get_the_ID(), $removed_arr ) ){ echo 'class="removed"';}; ?>><input class="checkbox" type="checkbox" name="post-<?php the_ID();?>" value="<?php the_ID();?>" <?php echo (in_array( get_the_ID(), $progress_arr ) ? 'checked' : ''); if( in_array( get_the_ID(), $removed_arr ) ){ echo 'disabled';}; ?>/><?php the_title();?></div>
-<?php
+		$order_sections = array();
+		foreach( $order_list as $order_type){
+			$order_sections[ $order_type ] = array();
 		}
-	}
-	wp_reset_query();?>
+		$parents = array();
+		global $post;
+		while( $the_query->have_posts() ){
+			$the_query->the_post();
+			if( 0 != $post->post_parent ) $parents[] = $post->post_parent;
+			$order_sections[ $post->post_type ][ $post->ID ] = $post->post_title;
+		}
+		wp_reset_query();?>
+		<ul><?php
+		foreach( $order_sections as $key => $order_section ){
+			$post_type = get_post_type_object( $key );
+			if( $post_type ){?>
+				<li>
+					<div class="section_title"><?php echo $post_type->label;?></div>
+					<ul><?php
+					foreach( $order_section as $choice_id => $choice_title ){
+						if( in_array( $choice_id, $parents ) ) continue;	?>
+						<li class="item<?php if( in_array( $choice_id, $added_arr ) ){ echo ' added';}elseif( in_array( $choice_id, $removed_arr ) ){ echo ' removed';}; ?>"><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $progress_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /><?php echo $choice_title;?><br/></li><?php
+					}?>
+					</ul>
+				</li><?php
+			}
+		}?>
+		</ul><?php
+	}?>
 	<input type="hidden" name="string" value="<?php echo $progress_str;?>"/>
 <?php
 }
