@@ -9,7 +9,7 @@ li.section{
 }
 li.item{
 	margin: 0;
-	padding: 8px 0px 10px;
+	padding: 5px 0px 7px;
 }
 li.item.added{
 	background-color: #ccffcc;
@@ -19,12 +19,12 @@ li.item.removed{
 }
 li.item span.progress{
 	margin: 0;
-  padding: 9px 5px 11px 5px;
+  padding: 6px 2px 8px 2px;
 	background-color: #F9EC00;
 }
 li.item span.done{
 	margin: 0;
-  padding: 9px 5px 11px 5px;
+  padding: 6px 2px 8px 2px;
 	background-color: #23F900;
 }
 li.item span input{
@@ -33,15 +33,15 @@ li.item span input{
 .legend ul{
   border: 1px solid #ababab;
   display: inline-block;
-  padding: 5px;
+  padding: 2px 5px;
   margin: 0;
 }
 .legend li.item{
 	display: inline-block;
-	padding: 8px 0 10px;
+	padding: 8px 0 10px 0;
 }
 .legend li.item.text{
-	padding: 8px 10px 10px;
+	padding: 5px 10px 7px;
 }
 .legend li.item span.progress, .legend li.item span.done{
 	padding-left: 10px;
