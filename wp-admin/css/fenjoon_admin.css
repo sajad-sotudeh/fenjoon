@@ -1,9 +1,17 @@
-div.added{
-	font-weight:bold;
+.section_title{
+  margin-bottom: 8px;
+  padding: 3px 10px 5px;
+	background-color: #0074A2;
+  color: #efefef;
+}
+li.item{
+	margin: 0;
+	padding: 3px;
+}
+li.item.added{
 	background-color: #ccffcc;
 }
-div.removed{
-	font-weight:bold;
+li.item.removed{
 	background-color: #ffcccc;
 }
 ul.listofrows{
