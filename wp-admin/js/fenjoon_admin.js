@@ -9,9 +9,22 @@ function get_string( classname ){
 	return string;
 }
 
+function get_string_dropdown( classname ){
+	var dropdowns = document.getElementsByClassName( classname );
+	var string_dropdown = '';
+	var array = new Array();
+	for( var j=0; j<dropdowns.length; j++ ){
+		var e = dropdowns[j];
+		var selectedIndex = e.selectedIndex;
+		var strUser = e.options[selectedIndex].value;
+		array.push( e.getAttribute('post')+'-'+strUser );
+	}
+	string_dropdown = array.join('+');
+	return string_dropdown;
+}
+
 window.onload = function(){
 	var checkboxes = document.getElementsByClassName('checkbox');
-	var string = get_string( 'checkbox' );
 	for( var i=0; i<checkboxes.length; i++ ){
 		checkboxes[i].onclick = function(){
 			string = get_string( 'checkbox' );
@@ -20,11 +33,18 @@ window.onload = function(){
 	}
 
 	var checkboxes_done = document.getElementsByClassName('checkbox_done');
-	var string_done = get_string( 'checkbox_done' );
 	for( var i=0; i<checkboxes_done.length; i++ ){
 		checkboxes_done[i].onclick = function(){
 			string_done = get_string( 'checkbox_done' );
 			document.getElementsByName('string_done')[0].setAttribute('value', string_done);
+		}
+	}
+
+	var dropdowns = document.getElementsByClassName('dropdown');
+	for( var i=0; i<dropdowns.length; i++ ){
+		dropdowns[i].onchange = function(){
+			string_dropdown = get_string_dropdown( 'dropdown' );
+			document.getElementsByName('string_dropdown')[0].setAttribute('value', string_dropdown);
 		}
 	}
 }

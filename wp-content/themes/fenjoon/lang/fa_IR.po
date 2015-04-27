@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Fenjoon\n"
-"POT-Creation-Date: 2015-04-24 22:25+0330\n"
-"PO-Revision-Date: 2015-04-24 22:27+0330\n"
+"POT-Creation-Date: 2015-04-25 05:18+0330\n"
+"PO-Revision-Date: 2015-04-25 05:18+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -365,51 +365,55 @@ msgstr "پروژه آغاز شد"
 msgid "Change to Project"
 msgstr "ایجاد یک پروژه"
 
-#: functions.php:746 functions.php:747
+#: functions.php:737 functions.php:738
 msgid "Fenjoon Settings"
 msgstr "تنظیمات فنجون"
 
-#: functions.php:777
+#: functions.php:768
 msgid "Work Force Settings"
 msgstr "تنظیمات نیروی کار"
 
-#: functions.php:784
+#: functions.php:775
 msgid "Developers Count"
 msgstr "تعداد نفرات توسعه دهنده"
 
-#: functions.php:792
+#: functions.php:783
 msgid "Man-Hour Fee"
 msgstr "هزینه هر نفر ساعت کار"
 
-#: functions.php:800
+#: functions.php:791
 msgid "Daily Work Hours"
 msgstr "ساعت کار روزانه"
 
-#: functions.php:859
+#: functions.php:850 functions.php:1019
 msgid "Project Progress"
 msgstr "چک لیست پیشرفت پروژه"
 
-#: functions.php:867
+#: functions.php:858
 msgid "Last changes of this Project"
 msgstr "آخرین تغییرات اعمال شده"
 
-#: functions.php:913
+#: functions.php:884
+msgid "Not assigned yet"
+msgstr "تخصیص داده نشده"
+
+#: functions.php:938
 msgid "In Progress"
 msgstr "شروع به انجام"
 
-#: functions.php:914
+#: functions.php:939
 msgid "Done"
 msgstr "انجام شد"
 
-#: functions.php:915
+#: functions.php:940
 msgid "Still in order"
 msgstr "در لیست سفارش"
 
-#: functions.php:916
+#: functions.php:941
 msgid "Added to order"
 msgstr "افزوده شده به لیست سفارش"
 
-#: functions.php:917
+#: functions.php:942
 msgid "Removed from order"
 msgstr "حذف شده از لیست سفارش"
 

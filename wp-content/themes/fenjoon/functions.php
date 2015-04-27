@@ -581,7 +581,7 @@ function order_list( $post ){
 		<ul><?php
 		foreach( $order_sections as $key => $order_section ){
 			$post_type = get_post_type_object( $key );
-			if( $post_type ){?>
+			if( $post_type && !empty( $order_sections[ $key ] ) ){?>
 				<li class="section">
 					<div class="section_title"><?php echo $post_type->label;?></div>
 					<ul><?php
@@ -712,28 +712,19 @@ function last_change_by(){
 	global $post;
 	$changes_str = get_post_meta( $post->ID, 'changes_str', 1 );
 	if( empty( $changes_str ) ) return;
-	$changes_arr = explode( '+', $changes_str );
-	$changes_time = array();
-	$changes_user = array();
+	$changes_arr = explode( '+', $changes_str );?>
+	<ul class="listofrows"><?php
 	foreach( $changes_arr as $change ){
-		$change_arr = explode( '*', $change ); 
-		array_push( $changes_user, $change_arr[0] );
-		array_push( $changes_time, $change_arr[1] );
-	}
-	$users = get_users( array( 'include' => $changes_user ) ); ?>
-	<ul class="listofrows"">
-<?php
-	for( $i=0; $i<count( $changes_arr ); $i++ ){
-		?>
+		$change_arr = explode( '*', $change );
+		$user_info = get_userdata( $change_arr[0] );
+		$change_time = $change_arr[1]; ?>
 		<li class="row">
-			<div class="right"><?php echo $users[$i]->display_name;?></div>
-			<div class="left"><?php echo $changes_time[$i];?></div>
+			<div class="right"><?php echo $user_info->display_name;?></div>
+			<div class="left"><?php echo $change_time;?></div>
 		</li>
 <?php
-	}
-?>
-	</ul>
-<?php
+	}?>
+	</ul><?php
 }
 add_action( 'add_meta_boxes', 'add_order_to_project_metabox', 0 );
 
@@ -874,6 +865,28 @@ function add_project_list_metabox(){
 	}
 }
 
+function display_worker( $workers, $assign, $choice_id ){
+	if( is_super_admin() ){
+		?>
+		<select class="dropdown" post="<?php echo $choice_id;?>"><?php
+		foreach( $workers as $worker ){?>
+			<option value="<?php echo $worker->data->ID;?>" <?php if( $assign[ $choice_id ] == $worker->data->ID ) echo 'selected';?>><?php echo $worker->data->display_name;?></option><?php
+		}?>
+		</select><?php
+	}else{
+?>
+		<span><?php
+		if( !empty( $assign ) ){
+			foreach( $workers as $worker ){
+				if( $assign[ $choice_id ] == $worker->data->ID ) echo $worker->data->display_name;
+			}
+		}else{
+			_e( 'Not assigned yet', 'fenjoon' );
+		}?>
+		</span><?php
+	}
+}
+
 function project_list( $post ){
 	$project_list = array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' );
 	$project_id = $post->ID;
@@ -896,6 +909,18 @@ function project_list( $post ){
 		$done_str = get_post_meta( $project_id, 'done_str', 1 );
 		$done_arr = array();
 		if( !empty( $done_str ) )	$done_arr = explode( '+', $done_str );
+		$worker_str = get_post_meta( $project_id, 'worker_str', 1 );
+		$workers_arr = array();
+		if( !empty( $worker_str ) )	$workers_arr = explode( '+', $worker_str );
+		$assign = array();
+		foreach( $workers_arr as $work_str ){
+			if( !empty( $work_str ) )	$work_arr = explode( '-', $work_str );
+			$work_id = $work_arr[0];
+			$worker_id = $work_arr[1];
+			$assign[ $work_id ] = $worker_id;
+		}
+		$workers = get_users( array( 'role' => 'editor' ) );
+		//if( empty( $workers ) ) return; Activate if the site has at least one editor
 		$project_sections = array();
 		foreach( $project_list as $project_type){
 			$project_sections[ $project_type ] = array();
@@ -920,13 +945,13 @@ function project_list( $post ){
 		<ul><?php
 		foreach( $project_sections as $key => $project_section ){
 			$post_type = get_post_type_object( $key );
-			if( $post_type ){?>
+			if( $post_type && !empty( $project_sections[ $key ] ) ){?>
 				<li class="section">
 					<div class="section_title"><?php echo $post_type->label;?></div>
 					<ul><?php
 					foreach( $project_section as $choice_id => $choice_title ){
 						if( in_array( $choice_id, $parents ) ) continue;	?>
-						<li class="item<?php if( in_array( $choice_id, $added_arr ) ){ echo ' added';}elseif( in_array( $choice_id, $removed_arr ) ){ echo ' removed';}; ?>"><span class="progress"><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $progress_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span><span class="done"><input class="checkbox_done" type="checkbox" name="post-done-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $done_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span>
+						<li class="item<?php if( in_array( $choice_id, $added_arr ) ){ echo ' added';}elseif( in_array( $choice_id, $removed_arr ) ){ echo ' removed';}; ?>"><span class="worker"><?php display_worker( $workers, $assign, $choice_id );?></span><span class="progress"><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $progress_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span><span class="done"><input class="checkbox_done" type="checkbox" name="post-done-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $done_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span>
 							<span class="title"><?php echo $choice_title;?></span>
 						</li><?php
 					}?>
@@ -938,6 +963,7 @@ function project_list( $post ){
 	}?>
 	<input type="hidden" name="string" value="<?php echo $progress_str;?>"/>
 	<input type="hidden" name="string_done" value="<?php echo $done_str;?>"/>
+	<input type="hidden" name="string_dropdown" value="<?php echo $worker_str;?>"/>
 <?php
 }
 add_action( 'add_meta_boxes', 'add_project_list_metabox', 0 );
@@ -957,6 +983,8 @@ function save_project_list(){
 	if( $progress_str ) update_post_meta( $post_id, 'progress_str', $progress_str );
 	$done_str = $_POST['string_done'];
 	if( $done_str ) update_post_meta( $post_id, 'done_str', $done_str );
+	$worker_str = $_POST['string_dropdown'];
+	if( $worker_str ) update_post_meta( $post_id, 'worker_str', $worker_str );
 
 // Project last changes metabox
 	$changes_str = get_post_meta( $post_id, 'changes_str', 1 );
@@ -977,4 +1005,30 @@ function save_project_list(){
 	update_post_meta( $post_id, 'changes_str', $changes_str );	
 }
 add_action( 'post_updated', 'save_project_list' );
+
+
+//******************************************
+// Add project progress metabox - Project edit page
+//******************************************
+function add_project_progress_metabox(){
+	if( is_admin() ){
+		global $pagenow;
+		if( 'post.php' == $pagenow ){
+			add_meta_box( 
+				'project_progress',
+				__('Project Progress', 'fenjoon' ),
+				'project_progress',
+				'projects',
+				'side',
+				'low'
+			);
+		}
+	}
+}
+
+function project_progress(){
+	
+}
+add_action( 'add_meta_boxes', 'add_project_progress_metabox', 0 );
+
 ?>
