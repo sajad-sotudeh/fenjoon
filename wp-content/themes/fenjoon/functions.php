@@ -581,13 +581,15 @@ function order_list( $post ){
 		<ul><?php
 		foreach( $order_sections as $key => $order_section ){
 			$post_type = get_post_type_object( $key );
-			if( $post_type ){?>
-				<li>
+			if( $post_type && !empty( $order_sections[ $key ] ) ){?>
+				<li class="section">
 					<div class="section_title"><?php echo $post_type->label;?></div>
 					<ul><?php
 					foreach( $order_section as $choice_id => $choice_title ){
 						if( in_array( $choice_id, $parents ) ) continue;	?>
-						<li><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $order_arr ) ? 'checked' : '');echo (in_array( $choice_id, $progress_arr ) ? ' disabled' : ''); ?> /><?php echo $choice_title;?><br/></li><?php
+						<li class="item">
+							<input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $order_arr ) ? 'checked' : '');echo (in_array( $choice_id, $progress_arr ) ? ' disabled' : ''); ?> /><?php echo $choice_title;?>
+						</li><?php
 					}?>
 					</ul>
 				</li><?php
@@ -710,28 +712,19 @@ function last_change_by(){
 	global $post;
 	$changes_str = get_post_meta( $post->ID, 'changes_str', 1 );
 	if( empty( $changes_str ) ) return;
-	$changes_arr = explode( '+', $changes_str );
-	$changes_time = array();
-	$changes_user = array();
+	$changes_arr = explode( '+', $changes_str );?>
+	<ul class="listofrows"><?php
 	foreach( $changes_arr as $change ){
-		$change_arr = explode( '*', $change ); 
-		array_push( $changes_user, $change_arr[0] );
-		array_push( $changes_time, $change_arr[1] );
-	}
-	$users = get_users( array( 'include' => $changes_user ) ); ?>
-	<ul class="listofrows"">
-<?php
-	for( $i=0; $i<count( $changes_arr ); $i++ ){
-		?>
+		$change_arr = explode( '*', $change );
+		$user_info = get_userdata( $change_arr[0] );
+		$change_time = $change_arr[1]; ?>
 		<li class="row">
-			<div class="right"><?php echo $users[$i]->display_name;?></div>
-			<div class="left"><?php echo $changes_time[$i];?></div>
+			<div class="right"><?php echo $user_info->display_name;?></div>
+			<div class="left"><?php echo $change_time;?></div>
 		</li>
 <?php
-	}
-?>
-	</ul>
-<?php
+	}?>
+	</ul><?php
 }
 add_action( 'add_meta_boxes', 'add_order_to_project_metabox', 0 );
 
@@ -872,8 +865,30 @@ function add_project_list_metabox(){
 	}
 }
 
-function project_list(){
-	global $post;
+function display_worker( $workers, $assign, $choice_id ){
+	if( is_super_admin() ){
+		?>
+		<select class="dropdown" post="<?php echo $choice_id;?>"><?php
+		foreach( $workers as $worker ){?>
+			<option value="<?php echo $worker->data->ID;?>" <?php if( $assign[ $choice_id ] == $worker->data->ID ) echo 'selected';?>><?php echo $worker->data->display_name;?></option><?php
+		}?>
+		</select><?php
+	}else{
+?>
+		<span><?php
+		if( !empty( $assign ) ){
+			foreach( $workers as $worker ){
+				if( $assign[ $choice_id ] == $worker->data->ID ) echo $worker->data->display_name;
+			}
+		}else{
+			_e( 'Not assigned yet', 'fenjoon' );
+		}?>
+		</span><?php
+	}
+}
+
+function project_list( $post ){
+	$project_list = array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' );
 	$project_id = $post->ID;
 	$order_id = get_post_meta( $project_id, 'order_id', 1 );
 	$order_str = get_post_meta( $order_id, 'order_str', 1 );
@@ -884,21 +899,71 @@ function project_list(){
 	if( !empty( $project_str ) ) $project_arr = explode( '+', $project_str );
 	$removed_arr = array_diff( $project_arr, $order_arr );
 	$added_arr = array_diff( $order_arr, $project_arr );	
-	$args = array( 'post__in' => array_merge( $project_arr, $added_arr, $removed_arr ), 'post_type' => array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' ), 'orderby' => 'menu_order', 'posts_per_page' => -1 );
-	$pl_query = new WP_Query( $args );
-	if ( $pl_query->have_posts() ) {
+	$args = array( 'post__in' => array_merge( $project_arr, $added_arr, $removed_arr ), 'post_type' => $project_list, 'orderby' => 'menu_order', 'posts_per_page' => -1 );
+	$the_query = new WP_Query( $args );
+	if ( $the_query->have_posts() ) {
 		wp_nonce_field(basename( __FILE__ ), 'save_project');
 		$progress_str = get_post_meta( $project_id, 'progress_str', 1 );
 		$progress_arr = array();
 		if( !empty( $progress_str ) )	$progress_arr = explode( '+', $progress_str );
-		while ( $pl_query->have_posts() ) {
-			$pl_query->the_post();?>
-			<div <?php if( in_array( get_the_ID(), $added_arr ) ){ echo 'class="added"';}elseif( in_array( get_the_ID(), $removed_arr ) ){ echo 'class="removed"';}; ?>><input class="checkbox" type="checkbox" name="post-<?php the_ID();?>" value="<?php the_ID();?>" <?php echo (in_array( get_the_ID(), $progress_arr ) ? 'checked' : ''); if( in_array( get_the_ID(), $removed_arr ) ){ echo 'disabled';}; ?>/><?php the_title();?></div>
-<?php
+		$done_str = get_post_meta( $project_id, 'done_str', 1 );
+		$done_arr = array();
+		if( !empty( $done_str ) )	$done_arr = explode( '+', $done_str );
+		$worker_str = get_post_meta( $project_id, 'worker_str', 1 );
+		$workers_arr = array();
+		if( !empty( $worker_str ) )	$workers_arr = explode( '+', $worker_str );
+		$assign = array();
+		foreach( $workers_arr as $work_str ){
+			if( !empty( $work_str ) )	$work_arr = explode( '-', $work_str );
+			$work_id = $work_arr[0];
+			$worker_id = $work_arr[1];
+			$assign[ $work_id ] = $worker_id;
 		}
-	}
-	wp_reset_query();?>
+		$workers = get_users( array( 'role' => 'editor' ) );
+		//if( empty( $workers ) ) return; Activate if the site has at least one editor
+		$project_sections = array();
+		foreach( $project_list as $project_type){
+			$project_sections[ $project_type ] = array();
+		}
+		$parents = array();
+		global $post;
+		while( $the_query->have_posts() ){
+			$the_query->the_post();
+			if( 0 != $post->post_parent ) $parents[] = $post->post_parent;
+			$project_sections[ $post->post_type ][ $post->ID ] = $post->post_title;
+		}
+		wp_reset_query();?>
+		<div class="legend">
+			<ul>
+				<li class="item"><span class="progress"><input type="checkbox"><?php _e('In Progress', 'fenjoon');?></span></li>
+				<li class="item"><span class="done"><input type="checkbox"><?php _e('Done', 'fenjoon');?></span></li>
+				<li class="item text"><?php _e('Still in order', 'fenjoon');?></li>
+				<li class="item text added"><?php _e('Added to order', 'fenjoon');?></li>
+				<li class="item text removed"><?php _e('Removed from order', 'fenjoon');?></li>
+			</ul>
+		</div>
+		<ul><?php
+		foreach( $project_sections as $key => $project_section ){
+			$post_type = get_post_type_object( $key );
+			if( $post_type && !empty( $project_sections[ $key ] ) ){?>
+				<li class="section">
+					<div class="section_title"><?php echo $post_type->label;?></div>
+					<ul><?php
+					foreach( $project_section as $choice_id => $choice_title ){
+						if( in_array( $choice_id, $parents ) ) continue;	?>
+						<li class="item<?php if( in_array( $choice_id, $added_arr ) ){ echo ' added';}elseif( in_array( $choice_id, $removed_arr ) ){ echo ' removed';}; ?>"><span class="worker"><?php display_worker( $workers, $assign, $choice_id );?></span><span class="progress"><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $progress_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span><span class="done"><input class="checkbox_done" type="checkbox" name="post-done-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $done_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span>
+							<span class="title"><?php echo $choice_title;?></span>
+						</li><?php
+					}?>
+					</ul>
+				</li><?php
+			}
+		}?>
+		</ul><?php
+	}?>
 	<input type="hidden" name="string" value="<?php echo $progress_str;?>"/>
+	<input type="hidden" name="string_done" value="<?php echo $done_str;?>"/>
+	<input type="hidden" name="string_dropdown" value="<?php echo $worker_str;?>"/>
 <?php
 }
 add_action( 'add_meta_boxes', 'add_project_list_metabox', 0 );
@@ -916,6 +981,10 @@ function save_project_list(){
 // Project list metabox
 	$progress_str = $_POST['string'];
 	if( $progress_str ) update_post_meta( $post_id, 'progress_str', $progress_str );
+	$done_str = $_POST['string_done'];
+	if( $done_str ) update_post_meta( $post_id, 'done_str', $done_str );
+	$worker_str = $_POST['string_dropdown'];
+	if( $worker_str ) update_post_meta( $post_id, 'worker_str', $worker_str );
 
 // Project last changes metabox
 	$changes_str = get_post_meta( $post_id, 'changes_str', 1 );
@@ -936,4 +1005,30 @@ function save_project_list(){
 	update_post_meta( $post_id, 'changes_str', $changes_str );	
 }
 add_action( 'post_updated', 'save_project_list' );
+
+
+//******************************************
+// Add project progress metabox - Project edit page
+//******************************************
+function add_project_progress_metabox(){
+	if( is_admin() ){
+		global $pagenow;
+		if( 'post.php' == $pagenow ){
+			add_meta_box( 
+				'project_progress',
+				__('Project Progress', 'fenjoon' ),
+				'project_progress',
+				'projects',
+				'side',
+				'low'
+			);
+		}
+	}
+}
+
+function project_progress(){
+	
+}
+add_action( 'add_meta_boxes', 'add_project_progress_metabox', 0 );
+
 ?>
