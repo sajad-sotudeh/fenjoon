@@ -11,8 +11,13 @@ Domain Path: /lang
 */
 defined('FENJOON_DIR') or define('FENJOON_DIR',  dirname(__FILE__).DIRECTORY_SEPARATOR);
 /* =================================================================== */
-include FENJOON_DIR.'fenjoon-init.php';
+
 include FENJOON_DIR.'fenjoon-functions.php';
+
+//******************************************
+// Initialize
+//******************************************
+load_plugin_textdomain('fenjoon', false, basename(dirname(__FILE__)).'/lang');
 
 //******************************************
 // Add tasks table to database
