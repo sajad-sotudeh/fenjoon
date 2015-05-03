@@ -3,7 +3,6 @@
 // Basic Setup
 //******************************************
 function fenjoon_setup(){
-	//load_theme_textdomain('fenjoon', get_template_directory().'/lang');
 	add_theme_support( 'post-thumbnails' );
 	add_theme_support( 'menus' );
 }

@@ -62,9 +62,8 @@ $args = array( 'post_type' => array( 'sitetypes', 'modules', 'features', 'attrib
 
  <?php
 
-	function new_order_post() {
-
-		$post_id = wp_insert_post(
+function new_order_post() {
+	$post_id = wp_insert_post(
 			array(
 				'comment_status'	=>	'closed',
 				'ping_status'		=>	'closed',
@@ -78,7 +77,6 @@ $args = array( 'post_type' => array( 'sitetypes', 'modules', 'features', 'attrib
 
 	}
 add_filter( 'template_redirect', 'new_order_post' );
-var_dump (new_order_post());
 
 ?>
 
@@ -97,6 +95,5 @@ var_dump (new_order_post());
     <?php endwhile; endif; ?>
 <?php edit_post_link('Edit this entry.', '<p>', '</p>'); ?>
 </div>
-
 
 <?php get_footer(); ?>
