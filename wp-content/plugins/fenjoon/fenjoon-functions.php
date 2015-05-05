@@ -1,7 +1,10 @@
 <?php
-/**
- * get plugin version 
- */
+//******************************************
+// Sort object array elements by order key ( editors workforce )
+//******************************************
+function fjn_order_cmp( $a, $b ){
+	return ($a->order < $b->order) ? -1 : (($a->order > $b->order) ? 1 : 0);
+}
  
 //******************************************
 // CPT - Site Types
@@ -846,11 +849,11 @@ function add_project_list_metabox(){
 }
 
 function display_worker( $workers, $assign, $choice_id ){
-	if( is_super_admin() ){
-		?>
-		<select class="dropdown" post="<?php echo $choice_id;?>"><?php
+	if( is_super_admin() ){?>
+		<select class="dropdown" post="<?php echo $choice_id;?>">
+		<option selected><?php __( 'Choose worker', 'fenjoon' );?></option><?php
 		foreach( $workers as $worker ){?>
-			<option value="<?php echo $worker->data->ID;?>" <?php if( $assign[ $choice_id ] == $worker->data->ID ) echo 'selected';?>><?php echo $worker->data->display_name;?></option><?php
+			<option value="<?php echo $worker->ID;?>" <?php if( $assign[ $choice_id ] == $worker->ID ) echo 'selected';?>><?php echo $worker->display_name;?></option><?php
 		}?>
 		</select><?php
 	}else{
@@ -858,7 +861,7 @@ function display_worker( $workers, $assign, $choice_id ){
 		<span><?php
 		if( !empty( $assign ) ){
 			foreach( $workers as $worker ){
-				if( $assign[ $choice_id ] == $worker->data->ID ) echo $worker->data->display_name;
+				if( $assign[ $choice_id ] == $worker->ID ) echo $worker->display_name;
 			}
 		}else{
 			_e( 'Not assigned yet', 'fenjoon' );
@@ -899,8 +902,15 @@ function project_list( $post ){
 			$worker_id = $work_arr[1];
 			$assign[ $work_id ] = $worker_id;
 		}
-		$workers = get_users( array( 'role' => 'editor' ) );
+		$workers = get_users( array( 'role' => 'editor', 'fields' => array( 'ID', 'display_name') ) );
 		//if( empty( $workers ) ) return; Activate if the site has at least one editor
+		$sorted_by_free_time = fjn_workers_by_free_time();
+		foreach( $sorted_by_free_time as $key => $value ){
+			foreach( $workers as $worker ){
+				if( $worker->ID == $key ) $worker->order = $value;
+			}
+		}
+		usort( $workers, 'fjn_order_cmp' );
 		$project_sections = array();
 		foreach( $project_list as $project_type){
 			$project_sections[ $project_type ] = array();
@@ -1171,3 +1181,87 @@ function fjn_insert_record_to_db($worker_id,$work_id,$project_id){
 	$format= array('%d','%d','%d','%d','%s','%s','%s','%s');
     $wpdb->insert( $tablename , $data , $format );
 }
+//******************************************
+// User Tasks
+//******************************************
+function fjn_task_menu(){
+	add_users_page( __( 'tasks menu', 'fenjoon' ), __( 'tasks', 'fenjoon' ), 'edit_others_posts', 'tasks_user', 'fjn_tasks' );
+}
+add_action( 'admin_menu', 'fjn_task_menu' );
+function fjn_tasks(){
+	global $wpdb;
+	$tablename = $wpdb->prefix.'tasks';
+	$current_user = wp_get_current_user();	
+	$works_db = " SELECT post_title, work_id FROM $wpdb->posts, $tablename
+				  WHERE  $wpdb->posts.ID = $tablename.work_id AND worker_id = $current_user->id ";
+	$result_works = $wpdb -> get_results( $works_db, OBJECT );
+    $projects_db = " SELECT post_title, work_id FROM $wpdb->posts, $tablename
+				     WHERE  $wpdb->posts.ID = $tablename.project_id AND worker_id = $current_user->id ";
+	$result_projects = $wpdb -> get_results( $projects_db, OBJECT );?>
+	<div class = "title_tasks"><?php echo __( 'tasks list', 'fenjoon' );?></div>
+	<ol  type = "1" class = "tasks"><?php
+		foreach( ( array ) $result_projects as $project ){
+			foreach( ( array ) $result_works as $work ){
+				if( $project -> work_id == $work -> work_id ){?>
+					<li>
+						<?php echo $project -> post_title." -  ".$work -> post_title; ?>
+					</li><?php
+				}
+			}
+		}?>
+	</ol><?php
+}
+
+//*******************************************
+// get workers by free time
+//*******************************************
+function fjn_get_meta_by_key( $key = array() ){
+	global $wpdb;
+	if( empty( $key ) ) return;
+	$query = "SELECT post_id, meta_key, meta_value FROM {$wpdb->postmeta} WHERE meta_key IN ('" . implode( "','", $key ) . "')";
+	$r = $wpdb->get_results( $query, ARRAY_A );
+	$workforce = array();
+	foreach( $r as $row ){
+		$post_id = array_shift( $row );
+		$key = $row['meta_key'];
+		$workforce[$post_id][$key] = $row['meta_value'];
+	}
+	return $workforce;
+}
+
+function fjn_workers_by_free_time(){
+	global $wpdb;
+	$workforce_meta = array( 'workforce', 'workforce_multi' );
+	$workforce_values = fjn_get_meta_by_key( $workforce_meta );
+	$tasks_table = $wpdb->prefix.'tasks';
+	$query_month = "SELECT worker_id, work_id, start_date FROM {$tasks_table} 
+		WHERE EXTRACT( YEAR_MONTH FROM start_date ) = EXTRACT( YEAR_MONTH FROM NOW() )";
+	$query = "SELECT `worker_id`, `work_id`, count(1) AS `count` FROM ({$query_month}) nested GROUP BY `worker_id`, `work_id`";
+	$r = $wpdb->get_results( $query, ARRAY_A );
+	$workforce = array();
+	$workforce_multi = array();
+	foreach( $r as $row ){
+		$worker_id = $row['worker_id'];
+		if( !isset( $workforce[$worker_id] ) ) $workforce[$worker_id] = 0;
+		if( !isset( $workforce_multi[$worker_id] ) ) $workforce_multi[$worker_id] = 0;
+		$work_id = $row['work_id'];
+		if( array_key_exists( 'workforce', $workforce_values[$work_id] ) ){
+			$workforce[$worker_id] += (int)$workforce_values[$work_id]['workforce'];
+		}elseif( array_key_exists( 'workforce_multi', $workforce_values[$work_id] ) ){
+			$workforce_multi[$worker_id] += (float)$workforce_values[$work_id]['workforce_multi'];	
+		};
+	}
+	$work_capacity = array();
+	foreach( $workforce as $id => $value ){
+		if( 0 == $workforce_multi[$id] ){
+			$work_capacity[$id] = $workforce[$id];
+		}elseif( 0 == $workforce[$id] ){
+			$work_capacity[$id] = $workforce_multi[$id];
+		}else{
+			$work_capacity[$id] = $workforce[$id] * $workforce_multi[$id];
+		}
+	}
+	asort( $work_capacity );
+	return $work_capacity;
+}
+?>	
