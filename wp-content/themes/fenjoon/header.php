@@ -6,3 +6,7 @@
 <body>
 	<div id="wrapper">
 		<div id="header"><h1>HEADER</h1></div>
+		<?php 
+		$workforce_values = fjn_workers_by_free_time( );
+		var_dump($workforce_values);
+		?>
