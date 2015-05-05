@@ -1005,14 +1005,14 @@ add_action( 'post_updated', 'save_project_list' );
 //******************************************
 // Add project progress metabox - Project edit page
 //******************************************
-function add_project_progress_metabox(){
+function fjn_add_project_progress_metabox(){
 	if( is_admin() ){
 		global $pagenow;
 		if( 'post.php' == $pagenow ){
 			add_meta_box( 
 				'project_progress',
 				__('Project Progress', 'fenjoon' ),
-				'project_progress',
+				'fjn_project_progress',
 				'projects',
 				'side',
 				'low'
@@ -1021,7 +1021,7 @@ function add_project_progress_metabox(){
 	}
 }
 
-function project_progress($post){
+function fjn_project_progress($post){
 	$project_list = array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' );
 	$project_id = $post->ID;
 	$order_id = get_post_meta( $project_id, 'order_id', 1 );
@@ -1050,21 +1050,16 @@ function project_progress($post){
 	}
 }
 
-add_action( 'add_meta_boxes', 'add_project_progress_metabox', 10, 1 );
+add_action( 'add_meta_boxes', 'fjn_add_project_progress_metabox', 10, 1 );
 
 //******************************************
 // Last Seen User Update
 //******************************************
 
-function user_last_login(){
+function fjn_user_last_login(){
 	$current_user = wp_get_current_user();
 	$current_user_id = $current_user->id;
-	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-	if ( ! is_plugin_active( 'wp-jalali/wp-jalali.php' ) ) { 
-		$date_info = date('Y-m-d H:i:s'); 
-	} else {
-		$date_info = jdate( 'Y-m-d H:i:s', strtotime( get_the_modified_date() ) );
-	};
+	$date_info = date('Y-m-d H:i:s'); 
 	update_user_meta( $current_user_id, 'last_login', $date_info );
 	update_user_meta( $current_user_id, 'last_login_time', time() );
 /* Get Info Last Seen User BY 
@@ -1073,7 +1068,7 @@ OR
 get_user_meta( $current_user_id, 'last_login_time', 1 );
 */
 };
-add_action( 'wp_loaded', 'user_last_login', 10 , 2 );
+add_action( 'wp_loaded', 'fjn_user_last_login', 10 , 2 );
 
 
 //******************************************
@@ -1081,12 +1076,13 @@ add_action( 'wp_loaded', 'user_last_login', 10 , 2 );
 //******************************************
 
 
-function create_tasks_menu() {
+function fjn_create_tasks_menu() {
 	global $wpdb;
 	global $wp_admin_bar;
+	$table_tasks=$wpdb->prefix.'tasks';
 	$current_user = wp_get_current_user();
 	$current_user_id=$current_user->id;
-	$seen_user = $wpdb -> get_col( "SELECT seen_date FROM wp_tasks WHERE worker_id = $current_user_id" );
+	$seen_user = $wpdb -> get_col( "SELECT seen_date FROM $table_tasks WHERE worker_id = $current_user_id" );
 	$seen_user_count = count($seen_user);
 	$count_tasks=0;
 	for ($x = 0; $x < $seen_user_count; $x++) {
@@ -1101,37 +1097,36 @@ function create_tasks_menu() {
 	'href' => 'users.php?page=tasks_user',
 	)); 
 }
-add_action('admin_bar_menu', 'create_tasks_menu', 1000);
+add_action('admin_bar_menu', 'fjn_create_tasks_menu', 1000);
 
 
 //******************************************
 // Check All Users Last Seen
 //******************************************
 
-function check_users_seen(){
+function fjn_check_users_seen(){
 	global $wpdb;
-	$seen_users = $wpdb -> get_col( "SELECT seen_date FROM wp_tasks WHERE seen_date = null OR seen_date = 0 " );
-	$seen_users_id = $wpdb -> get_col( "SELECT worker_id FROM wp_tasks WHERE seen_date = null OR seen_date = 0 " );
-	$seen_users_task = $wpdb -> get_col( "SELECT id FROM wp_tasks WHERE seen_date = null OR seen_date = 0 " );
-	$for_countr = count($seen_users);
+	$table_tasks=$wpdb->prefix.'tasks';
+	$query_user_seen=$wpdb -> get_results( "SELECT id,worker_id,seen_date FROM $table_tasks WHERE seen_date = null OR seen_date = 0 " );
+	$for_countr = count($query_user_seen);
 	for($y=0 ; $y <= $for_countr ; $y++){
-		$last_user_seen_time = get_user_meta( $seen_users_id[$y], 'last_login_time', 1 );
-		$last_user_seen = get_user_meta( $seen_users_id[$y], 'last_login', 1 );
+		$last_user_seen_time = get_user_meta( $query_user_seen[$y] -> worker_id, 'last_login_time', 1 );
+		$last_user_seen = get_user_meta( $query_user_seen[$y] -> worker_id, 'last_login', 1 );
 		if( time() - $last_user_seen_time > 3600){
 			$wpdb->update(
-		  	  	'wp_tasks',
+		  	  	$table_tasks ,
 		  	  	array (
 		  	  		'seen_date' => $last_user_seen  
 		  	  		) ,
 		  	  	array (
-		  	  		'worker_id' => $seen_users_id[$y] ,
-		  	  		'id' => $seen_users_task[$y]
+		  	  		'worker_id' => $query_user_seen[$y] -> worker_id ,
+		  	  		'id' => $query_user_seen[$y] -> id
 		  	  		)
 		  	);
 		}
 	}
 }
-add_action( 'wp_loaded', 'check_users_seen', 9 , 2 );
+add_action( 'wp_loaded', 'fjn_check_users_seen', 9 , 2 );
 
 //******************************************************
 // Insert the assigned tasks of Editors to the database
