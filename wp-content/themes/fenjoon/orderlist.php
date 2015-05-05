@@ -6,7 +6,7 @@ get_header();
 	 $cur_user = get_current_user_ID();?>
 	<p> Owner</p>
 	<p>This post was written by <?php echo ( the_author_meta('display_name', 1)); ?></p>
-		<a href="http://www.google.com">Create a new order</a>
+		<a href="">Create a new order</a>
  
 <?php
 		//this query displays the orders of the current user that have publish status
