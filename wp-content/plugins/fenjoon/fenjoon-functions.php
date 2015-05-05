@@ -1175,7 +1175,7 @@ function fjn_insert_record_to_db($worker_id,$work_id,$project_id){
 // User Tasks
 //******************************************
 function fjn_task_menu(){
-	add_users_page( __( 'tasks menu', 'fenjoon' ), __( 'tasks', 'fenjoon' ), 'edit_others_posts', 'tasks_user', 'fjn_tasks' );
+	add_users_page( __( 'My Tasks', 'fenjoon' ), __( 'My Tasks', 'fenjoon' ), 'edit_others_posts', 'tasks_user', 'fjn_tasks' );
 }
 add_action( 'admin_menu', 'fjn_task_menu' );
 function fjn_tasks(){
@@ -1188,7 +1188,7 @@ function fjn_tasks(){
     $projects_db = " SELECT post_title, work_id FROM $wpdb->posts, $tablename
 				     WHERE  $wpdb->posts.ID = $tablename.project_id AND worker_id = $current_user->id ";
 	$result_projects = $wpdb -> get_results( $projects_db, OBJECT );?>
-	<div class = "title_tasks"><?php echo __( 'tasks list', 'fenjoon' );?></div>
+	<div class = "title_tasks"><?php echo __( 'Task List', 'fenjoon' );?></div>
 	<ol  type = "1" class = "tasks"><?php
 		foreach( ( array ) $result_projects as $project ){
 			foreach( ( array ) $result_works as $work ){
@@ -1203,7 +1203,7 @@ function fjn_tasks(){
 }
 
 //*******************************************
-// get workers by free time
+// Get workers list by free time
 //*******************************************
 function fjn_get_meta_by_key( $key = array() ){
 	global $wpdb;
