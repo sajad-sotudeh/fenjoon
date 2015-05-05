@@ -1011,10 +1011,127 @@ function add_project_progress_metabox(){
 	}
 }
 
-function project_progress(){
-	
+function project_progress($post){
+	$project_list = array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' );
+	$project_id = $post->ID;
+	$order_id = get_post_meta( $project_id, 'order_id', 1 );
+	$order_str = get_post_meta( $order_id, 'order_str', 1 );
+	$order_arr = array();
+	if( !empty( $order_str ) ) $order_arr = explode( '+', $order_str );
+	$project_str = get_post_meta( $project_id, 'project_str', 1 );
+	$project_arr = array();
+	if( !empty( $project_str ) ) $project_arr = explode( '+', $project_str );
+	$project_count=count($order_arr);
+	$removed_arr = array_diff( $project_arr, $order_arr );
+	$added_arr = array_diff( $order_arr, $project_arr ); 
+	$args = array( 'post__in' => array_merge( $project_arr, $added_arr, $removed_arr ), 'post_type' => $project_list, 'orderby' => 'menu_order', 'posts_per_page' => -1 );
+	$the_query = new WP_Query( $args );
+	if ( $the_query->have_posts() ) {
+	wp_nonce_field(basename( __FILE__ ), 'save_project');
+	$progress_str = get_post_meta( $project_id, 'progress_str', 1 );
+	$progress_arr = array();
+	if( !empty( $progress_str ) ) $progress_arr = explode( '+', $progress_str );
+		$done_str = get_post_meta( $project_id, 'done_str', 1 );
+		$done_arr = array();
+		if( !empty( $done_str ) ) $done_arr = explode( '+', $done_str );
+		$project_done_count=count($done_arr);
+		wp_reset_query();
+		echo '%'.$project_done_count / $project_count*100;
+	}
 }
-add_action( 'add_meta_boxes', 'add_project_progress_metabox', 0 );
+
+add_action( 'add_meta_boxes', 'add_project_progress_metabox', 10, 1 );
+
+//******************************************
+// Last Seen User Update
+//******************************************
+
+function user_last_login(){
+
+	$current_user = wp_get_current_user();
+	$current_user_id = $current_user->id;
+	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	if ( ! is_plugin_active( 'wp-jalali/wp-jalali.php' ) ) { 
+		$date_info = date('h:i - j F Y '); 
+	} else {
+		$date_info = jdate( 'h:i - j F Y', strtotime( get_the_modified_date() ) );
+	};
+	update_user_meta( $current_user_id, 'last_login', $date_info );
+	update_user_meta( $current_user_id, 'last_login_time', time() );
+
+/* Get Info Last Seen User BY 
+get_user_meta( $current_user_id, 'last_login', 1 );
+OR
+get_user_meta( $current_user_id, 'last_login_time', 1 );
+*/
+}
+add_action( 'wp_loaded', 'user_last_login', 10 , 2 );
+
+
+//******************************************
+// Add Notification User Tasks
+//******************************************
+
+
+function create_jobs_menu() {
+	global $wpdb;
+	global $wp_admin_bar;
+	$current_user = wp_get_current_user();
+	$current_user_id=$current_user->id;
+	$seen_user = $wpdb -> get_col( "SELECT seen FROM wp_tasks WHERE user_id = $current_user_id" );
+	$seen_user_count = count($seen_user);
+	$count_jobs=0;
+	for ($x = 0; $x < $seen_user_count; $x++) {
+	  if ($seen_user[$x] == 0 || $seen_user[$x] == null){
+	  	  $count_jobs++;
+		}
+	}
+	$menu_id = 'jobs';
+	$wp_admin_bar->add_menu(array(
+	'id' => $menu_id,
+	'title' => $count_jobs . " " . __('New Jobs') ,
+	'href' => 'profile.php',
+	)); 
+}
+add_action('admin_bar_menu', 'create_jobs_menu', 1000);
+
+
+//******************************************
+// Check All Users Last Seen
+//******************************************
+
+function check_users_seen(){
+	global $wpdb;
+	$current_user = wp_get_current_user();
+	$current_user_id=$current_user->id;
+	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	if ( ! is_plugin_active( 'wp-jalali/wp-jalali.php' ) ) { 
+		$date_info = date('h:i - j F Y '); 
+	} else {
+		$date_info = jdate( 'h:i - j F Y', strtotime( get_the_modified_date() ) );
+	};
+	$seen_users = $wpdb -> get_col( "SELECT seen FROM wp_tasks WHERE seen = null OR seen=0 " );
+	$seen_users_id = $wpdb -> get_col( "SELECT user_id FROM wp_tasks WHERE seen = null OR seen=0" );
+	$seen_users_task = $wpdb -> get_col( "SELECT task_id FROM wp_tasks WHERE seen = null OR seen=0" );
+	$for_countr = count($seen_users);
+	for($y=0 ; $y <= $for_countr ; $y++){
+		$last_user_seen_time = get_user_meta( $seen_users_id[$y], 'last_login_time', 1 );
+		$last_user_seen = get_user_meta( $seen_users_id[$y], 'last_login', 1 );
+		if( time() - $last_user_seen_time > 3600){
+			$wpdb->update(
+		  	  	'wp_tasks',
+		  	  	array (
+		  	  		'seen' => $last_user_seen  
+		  	  		) ,
+		  	  	array (
+		  	  		'user_id' => $seen_users_id[$y] ,
+		  	  		'task_id' => $seen_users_task[$y]
+		  	  		)
+		  	);
+		}
+	}
+}
+add_action( 'wp_loaded', 'check_users_seen', 10 , 2 );
 
 //******************************************************
 // Insert the assigned tasks of Editors to the database
