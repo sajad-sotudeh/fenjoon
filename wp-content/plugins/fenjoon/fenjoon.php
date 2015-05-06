@@ -36,7 +36,8 @@ function fjn_add_tasks_table_to_db(){
 			assign_date DATETIME,
 			seen_date DATETIME,
 			start_date DATETIME,
-			done_date DATETIME
+			done_date DATETIME,
+			active BOOLEAN DEFAULT TRUE
 			);";
 		require_once( ABSPATH. 'wp-admin/includes/upgrade.php' );
 		dbDelta( $query );

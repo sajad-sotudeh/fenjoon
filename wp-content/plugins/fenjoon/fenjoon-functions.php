@@ -1131,7 +1131,6 @@ add_action( 'wp_loaded', 'fjn_check_users_seen', 9 , 2 );
 //******************************************************
 
 function fjn_assign_tasks_to_editors($project_id){	//assign tasks to editors in wp_tasks table in database to inform editors what they do!!
-	echo("proje: ") ;
 	$editor_str = get_post_meta( $project_id, 'editor_str', 1 );
 	$editors_arr = array();
 	if( !empty( $editor_str ) )	$editors_arr = explode( '+', $editor_str );
@@ -1150,16 +1149,42 @@ function fjn_assign_tasks_to_editors($project_id){	//assign tasks to editors in 
 
 function fjn_insert_record_to_db( $editor_id, $activity_id, $project_id ){
 	global $wpdb;
-	$tasks_table = $wpdb->prefix . 'tasks';
-	$data = array(
-		'task_id' => "",
-		'project_id' => $project_id, 
-		'editor_id' => $editor_id,
-		'activity_id' => $activity_id,
-		'assign_date' => date( "Y-m-d H:i:s" )
+	$tasks_table = $wpdb->prefix.'tasks';
+	$activity_check=$wpdb->query(
+	"SELECT  activity_id   FROM  $tasks_table   WHERE  activity_id = $activity_id"
 	);
-	$format= array('%d','%d','%d','%d','%s','%s','%s','%s');
-  $wpdb->insert( $tasks_table , $data , $format );
+	if ( !$activity_check ){								 //INSERTION
+		$data=array(
+		'task_id' => "",
+		'activity_id' => $activity_id,
+     	'project_id' => $project_id, 
+		'editor_id' => $editor_id,     
+		'assign_date' => date("Y-m-d H:i:s")
+		);
+	
+		$format= array('%d','%d','%d','%d','%s');
+		$wpdb->insert( $tasks_table , $data , $format );
+	}
+	else{    // UPDATE the task and assign 0 to inactive task
+		$editor=$wpdb->get_results(  "SELECT   editor_id	FROM  $tasks_table	 WHERE  activity_id = $activity_id"
+									);
+		$last=count($editor);	
+		if ($editor[$last-1]->editor_id != $editor_id){
+			$wpdb->query(
+						" UPDATE $tasks_table	 SET active = 0		WHERE activity_id = $activity_id"
+						);
+		$data=array(
+			'task_id' => "",
+			'activity_id' => $activity_id,
+			'project_id' => $project_id,  
+			'editor_id' => $editor_id,
+			'assign_date' => date("Y-m-d H:i:s")
+			);
+	
+		$format= array('%d','%d','%d','%d','%s');
+		$wpdb->insert( $tasks_table , $data , $format );	
+		}
+	}
 }
 //******************************************
 // User Tasks
