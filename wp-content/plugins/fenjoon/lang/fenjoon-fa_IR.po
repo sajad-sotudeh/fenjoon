@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Fenjoon\n"
-"POT-Creation-Date: 2015-05-05 19:37+0330\n"
-"PO-Revision-Date: 2015-05-05 19:37+0330\n"
+"POT-Creation-Date: 2015-05-06 06:57+0330\n"
+"PO-Revision-Date: 2015-05-06 07:37+0330\n"
 "Last-Translator: \n"
 "Language-Team: Fenjoon\n"
 "Language: fa_IR\n"
@@ -404,8 +404,8 @@ msgid "Last changes of this Project"
 msgstr "آخرین تغییرات اعمال شده"
 
 #: fenjoon-functions.php:854
-msgid "Choose worker"
-msgstr "انتخاب کنید"
+msgid "Choose editor"
+msgstr "انتخاب ویرایشگر"
 
 #: fenjoon-functions.php:867
 msgid "Not assigned yet"
@@ -415,7 +415,7 @@ msgstr "تخصیص داده نشده"
 msgid "In Progress"
 msgstr "شروع به انجام"
 
-#: fenjoon-functions.php:929
+#: fenjoon-functions.php:929 inc/fjn-task-list.php:40
 msgid "Done"
 msgstr "انجام شد"
 
@@ -431,14 +431,126 @@ msgstr "افزوده شده به لیست سفارش"
 msgid "Removed from order"
 msgstr "حذف شده از لیست سفارش"
 
-#: fenjoon-functions.php:1100
+#: fenjoon-functions.php:1097
 msgid "New Tasks"
 msgstr "وظیفه جدید"
 
-#: fenjoon-functions.php:1178
+#: fenjoon-functions.php:1167
 msgid "My Tasks"
 msgstr "وظایف من"
 
-#: fenjoon-functions.php:1191
-msgid "Task List"
-msgstr "لیست وظایف"
+#: inc/class-fjn-list-table.php:36
+msgid "List View"
+msgstr "نمایش لیست"
+
+#: inc/class-fjn-list-table.php:37
+msgid "Excerpt View"
+msgstr "مشاهده خلاصه"
+
+#: inc/class-fjn-list-table.php:103
+msgid "No items found."
+msgstr "هیچ موردی یافت نشد."
+
+#: inc/class-fjn-list-table.php:156
+msgid "Select bulk action"
+msgstr "انتخاب کار کلی"
+
+#: inc/class-fjn-list-table.php:158
+msgid "Bulk Actions"
+msgstr "کارهای کلی"
+
+#: inc/class-fjn-list-table.php:165
+msgid "Apply"
+msgstr "اعمال"
+
+#: inc/class-fjn-list-table.php:215
+msgid "Filter by date"
+msgstr "فیلتر با زمان"
+
+#: inc/class-fjn-list-table.php:217
+msgid "All dates"
+msgstr "همه زمان ها"
+
+#: inc/class-fjn-list-table.php:230
+#, php-format
+msgid "%1$s %2$d"
+msgstr ""
+
+#: inc/class-fjn-list-table.php:258
+#, php-format
+msgid "%s pending"
+msgstr "%s در انتظار بررسی"
+
+#: inc/class-fjn-list-table.php:294 inc/class-fjn-list-table.php:578
+#, php-format
+msgid "1 item"
+msgid_plural "%s items"
+msgstr[0] "%s مورد"
+
+#: inc/class-fjn-list-table.php:313
+msgid "Go to the first page"
+msgstr "رفتن به صفحه اول"
+
+#: inc/class-fjn-list-table.php:320
+msgid "Go to the previous page"
+msgstr "صفحه قبلی"
+
+#: inc/class-fjn-list-table.php:329
+msgid "Select Page"
+msgstr "انتخاب صفحه"
+
+#: inc/class-fjn-list-table.php:330
+msgid "Current page"
+msgstr "صفحه جاری"
+
+#: inc/class-fjn-list-table.php:336
+#, php-format
+msgctxt "paging"
+msgid "%1$s of %2$s"
+msgstr ""
+
+#: inc/class-fjn-list-table.php:340
+msgid "Go to the next page"
+msgstr "صفحه بعدی"
+
+#: inc/class-fjn-list-table.php:347
+msgid "Go to the last page"
+msgstr "رفتن به صفحه آخر"
+
+#: inc/class-fjn-list-table.php:422
+msgid "Select All"
+msgstr "انتخاب همه"
+
+#: inc/fjn-task-list.php:14
+msgid "All tasks assigned to you over time"
+msgstr "وظایفی که تا کنون به شما تخصیص داده شده است"
+
+#: inc/fjn-task-list.php:34
+msgid "Task ID"
+msgstr "شناسه"
+
+#: inc/fjn-task-list.php:35
+msgid "Activity title"
+msgstr "فعالیت"
+
+#: inc/fjn-task-list.php:36
+msgid "Project title"
+msgstr "پروژه"
+
+#: inc/fjn-task-list.php:37
+msgid "Assigned"
+msgstr "تخصیص"
+
+#: inc/fjn-task-list.php:38
+msgid "Seen"
+msgstr "رؤیت"
+
+#: inc/fjn-task-list.php:39
+msgid "Started"
+msgstr "شروع"
+
+#~ msgid "Choose worker"
+#~ msgstr "انتخاب کنید"
+
+#~ msgid "Task List"
+#~ msgstr "لیست وظایف"

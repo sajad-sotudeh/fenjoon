@@ -848,20 +848,20 @@ function add_project_list_metabox(){
 	}
 }
 
-function display_worker( $workers, $assign, $choice_id ){
+function display_editor( $editors, $assign, $choice_id ){
 	if( is_super_admin() ){?>
 		<select class="dropdown" post="<?php echo $choice_id;?>">
-		<option selected><?php __( 'Choose worker', 'fenjoon' );?></option><?php
-		foreach( $workers as $worker ){?>
-			<option value="<?php echo $worker->ID;?>" <?php if( $assign[ $choice_id ] == $worker->ID ) echo 'selected';?>><?php echo $worker->display_name;?></option><?php
+		<option selected><?php __( 'Choose editor', 'fenjoon' );?></option><?php
+		foreach( $editors as $editor ){?>
+			<option value="<?php echo $editor->ID;?>" <?php if( $assign[ $choice_id ] == $editor->ID ) echo 'selected';?>><?php echo $editor->display_name;?></option><?php
 		}?>
 		</select><?php
 	}else{
 ?>
 		<span><?php
 		if( !empty( $assign ) ){
-			foreach( $workers as $worker ){
-				if( $assign[ $choice_id ] == $worker->ID ) echo $worker->display_name;
+			foreach( $editors as $editor ){
+				if( $assign[ $choice_id ] == $editor->ID ) echo $editor->display_name;
 			}
 		}else{
 			_e( 'Not assigned yet', 'fenjoon' );
@@ -892,25 +892,25 @@ function project_list( $post ){
 		$done_str = get_post_meta( $project_id, 'done_str', 1 );
 		$done_arr = array();
 		if( !empty( $done_str ) )	$done_arr = explode( '+', $done_str );
-		$worker_str = get_post_meta( $project_id, 'worker_str', 1 );
-		$workers_arr = array();
-		if( !empty( $worker_str ) )	$workers_arr = explode( '+', $worker_str );
+		$editor_str = get_post_meta( $project_id, 'editor_str', 1 );
+		$editors_arr = array();
+		if( !empty( $editor_str ) )	$editors_arr = explode( '+', $editor_str );
 		$assign = array();
-		foreach( $workers_arr as $work_str ){
-			if( !empty( $work_str ) )	$work_arr = explode( '-', $work_str );
-			$work_id = $work_arr[0];
-			$worker_id = $work_arr[1];
-			$assign[ $work_id ] = $worker_id;
+		foreach( $editors_arr as $activity_str ){
+			if( !empty( $activity_str ) )	$activity_arr = explode( '-', $activity_str );
+			$activity_id = $activity_arr[0];
+			$editor_id = $activity_arr[1];
+			$assign[ $activity_id ] = $editor_id;
 		}
-		$workers = get_users( array( 'role' => 'editor', 'fields' => array( 'ID', 'display_name') ) );
-		//if( empty( $workers ) ) return; Activate if the site has at least one editor
-		$sorted_by_free_time = fjn_workers_by_free_time();
+		$editors = get_users( array( 'role' => 'editor', 'fields' => array( 'ID', 'display_name') ) );
+		//if( empty( $editors ) ) return; Activate if the site has at least one editor
+		$sorted_by_free_time = fjn_editors_by_free_time();
 		foreach( $sorted_by_free_time as $key => $value ){
-			foreach( $workers as $worker ){
-				if( $worker->ID == $key ) $worker->order = $value;
+			foreach( $editors as $editor ){
+				if( $editor->ID == $key ) $editor->order = $value;
 			}
 		}
-		usort( $workers, 'fjn_order_cmp' );
+		usort( $editors, 'fjn_order_cmp' );
 		$project_sections = array();
 		foreach( $project_list as $project_type){
 			$project_sections[ $project_type ] = array();
@@ -941,7 +941,7 @@ function project_list( $post ){
 					<ul><?php
 					foreach( $project_section as $choice_id => $choice_title ){
 						if( in_array( $choice_id, $parents ) ) continue;	?>
-						<li class="item<?php if( in_array( $choice_id, $added_arr ) ){ echo ' added';}elseif( in_array( $choice_id, $removed_arr ) ){ echo ' removed';}; ?>"><span class="worker"><?php display_worker( $workers, $assign, $choice_id );?></span><span class="progress"><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $progress_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span><span class="done"><input class="checkbox_done" type="checkbox" name="post-done-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $done_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span>
+						<li class="item<?php if( in_array( $choice_id, $added_arr ) ){ echo ' added';}elseif( in_array( $choice_id, $removed_arr ) ){ echo ' removed';}; ?>"><span class="editor"><?php display_editor( $editors, $assign, $choice_id );?></span><span class="progress"><input class="checkbox" type="checkbox" name="post-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $progress_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span><span class="done"><input class="checkbox_done" type="checkbox" name="post-done-<?php echo $choice_id;?>" value="<?php echo $choice_id;?>" <?php echo (in_array( $choice_id, $done_arr ) ? 'checked' : '');echo (in_array( $choice_id, $removed_arr ) ? ' disabled' : ''); ?> /></span>
 							<span class="title"><?php echo $choice_title;?></span>
 						</li><?php
 					}?>
@@ -953,7 +953,7 @@ function project_list( $post ){
 	}?>
 	<input type="hidden" name="string" value="<?php echo $progress_str;?>"/>
 	<input type="hidden" name="string_done" value="<?php echo $done_str;?>"/>
-	<input type="hidden" name="string_dropdown" value="<?php echo $worker_str;?>"/>
+	<input type="hidden" name="string_dropdown" value="<?php echo $editor_str;?>"/>
 <?php
 	
 }
@@ -974,11 +974,11 @@ function save_project_list(){
 	if( $progress_str ) update_post_meta( $post_id, 'progress_str', $progress_str );
 	$done_str = $_POST['string_done'];
 	if( $done_str ) update_post_meta( $post_id, 'done_str', $done_str );
-	$worker_str = $_POST['string_dropdown'];
-	if( $worker_str ) update_post_meta( $post_id, 'worker_str', $worker_str );
+	$editor_str = $_POST['string_dropdown'];
+	if( $editor_str ) update_post_meta( $post_id, 'editor_str', $editor_str );
 	
 	//Insert the tasks assigned to specific Editor in wp_tasks table
-	fjn_assign_tasks_to_workers($post_id);		
+	fjn_assign_tasks_to_editors( $post_id );		
 
 	
 // Project last changes metabox
@@ -1021,7 +1021,7 @@ function fjn_add_project_progress_metabox(){
 	}
 }
 
-function fjn_project_progress($post){
+function fjn_project_progress( $post ){
 	$project_list = array( 'sitetypes', 'modules', 'features', 'attributes', 'standards' );
 	$project_id = $post->ID;
 	$order_id = get_post_meta( $project_id, 'order_id', 1 );
@@ -1031,7 +1031,7 @@ function fjn_project_progress($post){
 	$project_str = get_post_meta( $project_id, 'project_str', 1 );
 	$project_arr = array();
 	if( !empty( $project_str ) ) $project_arr = explode( '+', $project_str );
-	$project_count=count($order_arr);
+	$project_count = count( $order_arr );
 	$removed_arr = array_diff( $project_arr, $order_arr );
 	$added_arr = array_diff( $order_arr, $project_arr ); 
 	$args = array( 'post__in' => array_merge( $project_arr, $added_arr, $removed_arr ), 'post_type' => $project_list, 'orderby' => 'menu_order', 'posts_per_page' => -1 );
@@ -1046,7 +1046,8 @@ function fjn_project_progress($post){
 		if( !empty( $done_str ) ) $done_arr = explode( '+', $done_str );
 		$project_done_count=count($done_arr);
 		wp_reset_query();
-		echo '%'.$project_done_count / $project_count*100;
+		if( 0 == $project_count ) $project_count = 1;
+		echo '%'.$project_done_count / $project_count * 100;
 	}
 }
 
@@ -1079,23 +1080,25 @@ add_action( 'wp_loaded', 'fjn_user_last_login', 10 , 2 );
 function fjn_create_tasks_menu() {
 	global $wpdb;
 	global $wp_admin_bar;
-	$table_tasks=$wpdb->prefix.'tasks';
+	$table_tasks = $wpdb->prefix.'tasks';
 	$current_user = wp_get_current_user();
-	$current_user_id=$current_user->id;
-	$seen_user = $wpdb -> get_col( "SELECT seen_date FROM $table_tasks WHERE worker_id = $current_user_id" );
+	$current_user_id = $current_user->id;
+	$seen_user = $wpdb -> get_col( "SELECT seen_date FROM {$table_tasks} WHERE editor_id = {$current_user_id}" );
 	$seen_user_count = count($seen_user);
-	$count_tasks=0;
-	for ($x = 0; $x < $seen_user_count; $x++) {
-	  if ($seen_user[$x] == 0 || $seen_user[$x] == null){
-	  	  $count_tasks++;
+	$count_tasks = 0;
+	for( $x = 0; $x < $seen_user_count; $x++ ){
+	  if( $seen_user[$x] == 0 || $seen_user[$x] == null ){
+	 	  $count_tasks++;
 		}
 	}
 	$menu_id = 'tasks';
-	$wp_admin_bar->add_menu(array(
-	'id' => $menu_id,
-	'title' => $count_tasks . " " . __('New Tasks') ,
-	'href' => 'users.php?page=tasks_user',
-	)); 
+	$wp_admin_bar->add_menu(
+		array(
+			'id' => $menu_id,
+			'title' => $count_tasks . " " . __('New Tasks') ,
+			'href' => 'users.php?page=tasks_user',
+		)
+	); 
 }
 add_action('admin_bar_menu', 'fjn_create_tasks_menu', 1000);
 
@@ -1106,23 +1109,18 @@ add_action('admin_bar_menu', 'fjn_create_tasks_menu', 1000);
 
 function fjn_check_users_seen(){
 	global $wpdb;
-	$table_tasks=$wpdb->prefix.'tasks';
-	$query_user_seen=$wpdb -> get_results( "SELECT id,worker_id,seen_date FROM $table_tasks WHERE seen_date = null OR seen_date = 0 " );
-	$for_countr = count($query_user_seen);
-	for($y=0 ; $y <= $for_countr ; $y++){
-		$last_user_seen_time = get_user_meta( $query_user_seen[$y] -> worker_id, 'last_login_time', 1 );
-		$last_user_seen = get_user_meta( $query_user_seen[$y] -> worker_id, 'last_login', 1 );
-		if( time() - $last_user_seen_time > 3600){
+	$tasks_table = $wpdb->prefix . 'tasks';
+	$query_user_seen = $wpdb->get_results( "SELECT task_id, editor_id, seen_date FROM {$tasks_table} WHERE seen_date = null OR seen_date = 0 " );
+	$for_countr = count( $query_user_seen );
+	for( $y = 0; $y <= $for_countr; $y++ ){
+		$last_user_seen_time = get_user_meta( $query_user_seen[$y]->editor_id, 'last_login_time', 1 );
+		$last_user_seen = get_user_meta( $query_user_seen[$y] -> editor_id, 'last_login', 1 );
+		if( time() - $last_user_seen_time > 3600 ){
 			$wpdb->update(
-		  	  	$table_tasks ,
-		  	  	array (
-		  	  		'seen_date' => $last_user_seen  
-		  	  		) ,
-		  	  	array (
-		  	  		'worker_id' => $query_user_seen[$y] -> worker_id ,
-		  	  		'id' => $query_user_seen[$y] -> id
-		  	  		)
-		  	);
+				$tasks_table ,
+				array( 'seen_date' => $last_user_seen ),
+				array( 'editor_id' => $query_user_seen[$y]->editor_id,'task_id' => $query_user_seen[$y]->task_id )
+		  );
 		}
 	}
 }
@@ -1132,18 +1130,17 @@ add_action( 'wp_loaded', 'fjn_check_users_seen', 9 , 2 );
 // Insert the assigned tasks of Editors to the database
 //******************************************************
 
-function fjn_assign_tasks_to_workers($project_id){	//assign tasks to workers in wp_tasks table in database to inform workers what they do!!
-	echo("proje: ") ;var_dump($project_id);
-	$worker_str = get_post_meta( $project_id, 'worker_str', 1 );
-	var_dump($worker_str);
-	$workers_arr = array();
-	if( !empty( $worker_str ) )	$workers_arr = explode( '+', $worker_str );
+function fjn_assign_tasks_to_editors($project_id){	//assign tasks to editors in wp_tasks table in database to inform editors what they do!!
+	echo("proje: ") ;
+	$editor_str = get_post_meta( $project_id, 'editor_str', 1 );
+	$editors_arr = array();
+	if( !empty( $editor_str ) )	$editors_arr = explode( '+', $editor_str );
 	
-	foreach( $workers_arr as $work_str ){
-		if( !empty( $work_str ) )	$work_arr = explode( '-', $work_str );
-		$work_id = $work_arr[0];
-		$worker_id = $work_arr[1];
-		fjn_insert_record_to_db($worker_id,$work_id,$project_id);		
+	foreach( $editors_arr as $activity_str ){
+		if( !empty( $activity_str ) )	$activity_arr = explode( '-', $activity_str );
+		$activity_id = $activity_arr[0];
+		$editor_id = $activity_arr[1];
+		fjn_insert_record_to_db( $editor_id, $activity_id, $project_id );		
 	}
 }
 
@@ -1151,20 +1148,18 @@ function fjn_assign_tasks_to_workers($project_id){	//assign tasks to workers in 
 // Insertion of records function
 //******************************************
 
-function fjn_insert_record_to_db($worker_id,$work_id,$project_id){
+function fjn_insert_record_to_db( $editor_id, $activity_id, $project_id ){
 	global $wpdb;
-    $tablename=$wpdb->prefix.'tasks';
-    var_dump( $work_id);
-	$data=array(
-		'id' => "",
-        'worker_id' => $worker_id,
-        'project_id' => $project_id, 
-        'work_id' => $work_id,
-		'assign_date' => date("Y-m-d H:i:s")
-		);
-	
+	$tasks_table = $wpdb->prefix . 'tasks';
+	$data = array(
+		'task_id' => "",
+		'project_id' => $project_id, 
+		'editor_id' => $editor_id,
+		'activity_id' => $activity_id,
+		'assign_date' => date( "Y-m-d H:i:s" )
+	);
 	$format= array('%d','%d','%d','%d','%s','%s','%s','%s');
-    $wpdb->insert( $tablename , $data , $format );
+  $wpdb->insert( $tasks_table , $data , $format );
 }
 //******************************************
 // User Tasks
@@ -1174,31 +1169,29 @@ function fjn_task_menu(){
 }
 add_action( 'admin_menu', 'fjn_task_menu' );
 function fjn_tasks(){
-	global $wpdb;
-	$tablename = $wpdb->prefix.'tasks';
-	$current_user = wp_get_current_user();	
-	$works_db = " SELECT post_title, work_id FROM $wpdb->posts, $tablename
-				  WHERE  $wpdb->posts.ID = $tablename.work_id AND worker_id = $current_user->id ";
-	$result_works = $wpdb -> get_results( $works_db, OBJECT );
-    $projects_db = " SELECT post_title, work_id FROM $wpdb->posts, $tablename
-				     WHERE  $wpdb->posts.ID = $tablename.project_id AND worker_id = $current_user->id ";
-	$result_projects = $wpdb -> get_results( $projects_db, OBJECT );?>
-	<div class = "title_tasks"><?php echo __( 'Task List', 'fenjoon' );?></div>
-	<ol  type = "1" class = "tasks"><?php
-		foreach( ( array ) $result_projects as $project ){
-			foreach( ( array ) $result_works as $work ){
-				if( $project -> work_id == $work -> work_id ){?>
-					<li>
-						<?php echo $project -> post_title." -  ".$work -> post_title; ?>
-					</li><?php
-				}
-			}
-		}?>
-	</ol><?php
+ 	$fjn_task_list = new Task_List_Table();
+	$fjn_task_list->prepare_items();?>
+	<div class="wrap">
+		<h2><?php _e( 'All tasks assigned to you over time', 'fenjoon' );?></h2>
+		<?php $fjn_task_list->display(); ?>
+	</div><?php
+}
+add_action( 'admin_head', 'my_column_thumbnail_width' );
+function my_column_thumbnail_width(){?>
+<style type="text/css">
+.column-col_task_id{width:6%;}
+.column-col_activity_title{width:25%;}
+.column-col_project_title{width:35%;}
+.column-col_assign_date{width:10%;}
+.column-col_seen_date{width:10%;}
+.column-col_start_date{width:10%;}
+.column-col_done_date{width:10%;}
+</style>
+<?php
 }
 
 //*******************************************
-// Get workers list by free time
+// Get editors list by free time
 //*******************************************
 function fjn_get_meta_by_key( $key = array() ){
 	global $wpdb;
@@ -1214,26 +1207,26 @@ function fjn_get_meta_by_key( $key = array() ){
 	return $workforce;
 }
 
-function fjn_workers_by_free_time(){
+function fjn_editors_by_free_time(){
 	global $wpdb;
 	$workforce_meta = array( 'workforce', 'workforce_multi' );
 	$workforce_values = fjn_get_meta_by_key( $workforce_meta );
 	$tasks_table = $wpdb->prefix.'tasks';
-	$query_month = "SELECT worker_id, work_id, start_date FROM {$tasks_table} 
+	$query_month = "SELECT editor_id, activity_id, start_date FROM {$tasks_table} 
 		WHERE EXTRACT( YEAR_MONTH FROM start_date ) = EXTRACT( YEAR_MONTH FROM NOW() )";
-	$query = "SELECT `worker_id`, `work_id`, count(1) AS `count` FROM ({$query_month}) nested GROUP BY `worker_id`, `work_id`";
+	$query = "SELECT `editor_id`, `activity_id`, count(1) AS `count` FROM ({$query_month}) nested GROUP BY `editor_id`, `activity_id`";
 	$r = $wpdb->get_results( $query, ARRAY_A );
 	$workforce = array();
 	$workforce_multi = array();
 	foreach( $r as $row ){
-		$worker_id = $row['worker_id'];
-		if( !isset( $workforce[$worker_id] ) ) $workforce[$worker_id] = 0;
-		if( !isset( $workforce_multi[$worker_id] ) ) $workforce_multi[$worker_id] = 0;
-		$work_id = $row['work_id'];
-		if( array_key_exists( 'workforce', $workforce_values[$work_id] ) ){
-			$workforce[$worker_id] += (int)$workforce_values[$work_id]['workforce'];
-		}elseif( array_key_exists( 'workforce_multi', $workforce_values[$work_id] ) ){
-			$workforce_multi[$worker_id] += (float)$workforce_values[$work_id]['workforce_multi'];	
+		$editor_id = $row['editor_id'];
+		if( !isset( $workforce[$editor_id] ) ) $workforce[$editor_id] = 0;
+		if( !isset( $workforce_multi[$editor_id] ) ) $workforce_multi[$editor_id] = 0;
+		$activity_id = $row['activity_id'];
+		if( array_key_exists( 'workforce', $workforce_values[$activity_id] ) ){
+			$workforce[$editor_id] += (int)$workforce_values[$activity_id]['workforce'];
+		}elseif( array_key_exists( 'workforce_multi', $workforce_values[$activity_id] ) ){
+			$workforce_multi[$editor_id] += (float)$workforce_values[$activity_id]['workforce_multi'];	
 		};
 	}
 	$work_capacity = array();
