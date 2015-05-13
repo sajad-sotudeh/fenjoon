@@ -1267,4 +1267,57 @@ function fjn_editors_by_free_time(){
 	asort( $work_capacity );
 	return $work_capacity;
 }
+
+//******************************************
+// Insertion of records to payments table
+//******************************************
+
+function fjn_insert_record_to_payment_db( $project_id, $payment_date, $amount_paid ){
+	global $wpdb;
+	$payments_table = $wpdb->prefix.'payments';
+	$data=array(
+		'pay_id' 		=> "",
+     	'project_id'	=> 	$project_id, 
+		'payment_date' 	=>  $payment_date,     
+		'amount_paid' 	=>  $amount_paid
+		);
+	$format= array( '%d', '%d', '%s', '%d' );
+	$wpdb->insert( $payments_table, $data, $format );	
+}
+
+//******************************************
+// Add Payment History metabox - Project edit page
+//******************************************
+
+function fjn_add_payment_history_metabox(){
+	if( is_admin() ){
+		global $pagenow;
+		if( 'post.php' == $pagenow ){
+			add_meta_box( 
+				'payment_history',
+				__( 'Payment History', 'fenjoon' ),
+				'fjn_payment_history',
+				'projects',
+				'side',
+				'low'
+			);
+		}
+	}
+}
+function fjn_payment_history(){	
+	global $wpdb;
+	global $post;
+	$post_id = $post->ID;
+	$payments_table = $wpdb->prefix.'payments';
+	$query_payment = $wpdb->get_results( "SELECT payment_date, amount_paid FROM {$payments_table} WHERE project_id = {$post_id}" );?>		
+	<ul class="listofrows"><?php
+	foreach( ( array ) $query_payment as $pay ){?>
+		<li class="row">
+			<div class="right"><?php echo $pay->amount_paid;?></div>
+			<div class="left"><?php echo  $pay->payment_date;?></div>
+		</li><?php
+	}?>
+	</ul><?php
+}
+add_action( 'add_meta_boxes', 'fjn_add_payment_history_metabox', 0 );
 ?>	
