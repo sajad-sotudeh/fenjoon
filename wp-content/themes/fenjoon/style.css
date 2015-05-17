@@ -1,3 +1,13 @@
+/*
+Theme Name: Fenjoon
+Author: the Fenjoon team
+Description: the Fenjoon team's first theme
+Version: 1.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: gray, pink, purple, white, yellow, two-columns, right-sidebar, fixed-layout, responsive-layout, custom-colors, custom-header, custom-menu, editor-style, featured-images, microformats, post-formats, rtl-language-support, sticky-post, threaded-comments, translation-ready
+Text Domain: fenjoon
+*/
 /*/////////////////////////////////////////homepage//////////////////////////////////////*/
 /*****************************************home********************************************/
 #subnav {
@@ -592,11 +602,12 @@ p, ol, ul, dl, address {
     list-style: outside none none;
 }
 
-@media only screen and (max-width: 1024px)
+@media only screen and (max-width: 1024px){
 #header .header #nav #menu-main li {
   float: none;
   width: 100%;
   text-align: center;
+}
 }
 
 #header .header #main-nav ul li {
@@ -606,11 +617,11 @@ p, ol, ul, dl, address {
 }
 
 #navbar-toggle {
-	border-color: #DDD;
+	border-color: #ddd !important;
     float: left;
     margin-left: 15px;
 	position: relative;
-	padding: 9px 10px;
+	padding: 11px 10px;
 	margin-top: 8px;
 	margin-right: 15px;
 	margin-bottom: 8px;
@@ -621,25 +632,27 @@ p, ol, ul, dl, address {
 }
 
 media="screen, print"
-@media (min-width: 768px)
+@media (min-width: 768px){
 #navbar-toggle {
   display: none;
 }
+}
 
-@media only screen and (max-width: 1024px)
+@media only screen and (max-width: 1024px){
 #header .header #navbar-toggle {
   display: block;
 }
+}
 
-.navbar-default .navbar-toggle .icon-bar {
+#navbar-toggle .icon-bar {
     background-color: #CCC;
 }
 
-.navbar-toggle .icon-bar + .icon-bar {
+#navbar-toggle .icon-bar + .icon-bar {
     margin-top: 4px;
 }
 
-.navbar-toggle .icon-bar {
+#navbar-toggle .icon-bar {
     display: block;
     width: 22px;
     height: 2px;
@@ -650,7 +663,7 @@ media="screen, print"
   display: none;
 }
 
-@media only screen and (max-width: 1024px)
+@media only screen and (max-width: 1024px){
 #header .header #main-nav #navbar-toggle-close {
   display: block;
   position: absolute;
@@ -661,6 +674,7 @@ media="screen, print"
   cursor: pointer;
   color: #fff;
   font-size: 35px;
+}
 }
 
 #header .header #logo {
@@ -747,11 +761,12 @@ media="screen, print"
   transition: transform 0.4s,top 0.4s;
 }
 
-@media only screen and (max-width: 640px)
+@media only screen and (max-width: 640px){
 .search-bar-wide form {
   max-width: 80%;
   margin: 0 auto;
   position: relative;
+}
 }
 
 .search-bar-wide form {
@@ -834,9 +849,10 @@ input[type="button"], input[type="reset"], input[type="submit"] {
   padding: 60px 0 40px;
 }
 
-@media only screen and (max-width: 640px)
+@media only screen and (max-width: 640px){
 #footer {
   padding: 40px 0;
+}
 }
 
 #footer .footer-connect #footer-logo {
@@ -856,9 +872,10 @@ input[type="button"], input[type="reset"], input[type="submit"] {
   margin-bottom: 30px;
 }
 
-@media screen and (max-width: 640px)
+@media screen and (max-width: 640px){
 #footer #footer-nav {
   display: none;
+}
 }
 
 .sep {
@@ -1023,6 +1040,16 @@ figure {
   float: right;
 }
 
+@media only screen and (max-width: 640px){
+	.news-image {
+	  width:94%;/* 31.12582781456954%;*/
+	}
+
+	.news-article {
+	  width:94%;/* 65.56291390728477%;*/
+	}
+}
+
 figure img {
   margin-bottom: 0;
   display: block;
@@ -1052,11 +1079,12 @@ figure {
   clear: both;
 }
 
-@media only screen and (max-width: 640px)
+@media only screen and (max-width: 640px){
 .search-bar form {
   max-width: 80%;
   margin: 0 auto;
   position: relative;
+}
 }
 
 .search-bar{
@@ -1069,11 +1097,12 @@ figure {
   padding-right:3%;
 }
 
-@media only screen and (max-width: 640px)
+@media only screen and (max-width: 640px){
 .search-bar- form {
   max-width: 80%;
   margin: 0 auto;
   position: relative;
+}
 }
 
 .search-bar form {
@@ -1095,4 +1124,116 @@ figure {
   height: 45px;
   padding: 8px 15px;
 }
+/*/////////////////////////////////////////project-list//////////////////////////////////////*/
+.boxbg {
+  /*ackground-color:#FFF7E5;*/
+  margin-right:15%;
+  width:70%;
+  text-align:center;
+  border-radius:2px;
+  border: 1px solid rgba(100, 100, 100, 0.1);
+ }
+ 
+.panel {
+  margin: 20px auto 0;
+  width: 90%;
+}
 
+.panel-mobile{
+	display:none;
+}
+
+@media screen and (max-width: 700px){
+ .panel {
+  display:none;
+}
+
+.panel-mobile {
+  display:block;
+  margin: 20px auto 0;
+  width: 90%;
+}
+
+#path{
+  display:none;
+}
+}
+
+table {
+
+direction:rtl;
+  border-collapse: collapse;
+  line-height: 22px;
+}
+
+tr {
+direction:rtl;
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+ td{
+ direction:rtl;
+ }
+
+.circle {
+  direction:rtl;
+  width: 2em;
+  height: 2em;
+  text-align: center;
+  line-height: 2em;
+  border-radius: 1em;
+  /*background: dodgerblue;*/
+  background:rgba(238, 243, 249, 0.91);
+  margin: 0 2.8em;
+  display: inline-block;
+  color: black;
+  position: relative;
+  border: 1px solid rgba(100, 100, 100, 0.5);
+}
+
+.path-element::after{
+  content: '';
+  position: absolute;
+  top: 2em;
+  left: -3em;
+  width: 7em;
+  height: .2em;
+  background: rgba(100, 100, 100, 0.5);
+  z-index: -1;
+}
+
+
+.path-element:last-child::after {
+  display: none;
+}
+
+.active-bar {
+  background: rgb(147, 228, 191);
+}
+/*
+.active-bar ~ div {
+  background: lightblue;
+}
+
+.active-bar~ div::before {
+  background: lightblue;
+}
+*/
+.path-element{
+ display:inline-block;
+ position: relative;
+ text-align: center;
+ bottom: 20px; 
+ font-family:Tahoma; 
+ color: #888888;
+}
+/*/////////////////////////////////////////order-list//////////////////////////////////////*/
+.act {
+  text-align: left;
+  height: 35px;
+}
+
+.act a {
+  padding-right: 10px;
+}
