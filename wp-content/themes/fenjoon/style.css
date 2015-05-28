@@ -5,7 +5,14 @@ Description: the Fenjoon team's first theme
 Version: 1.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Tags: gray, pink, purple, white, yellow, two-columns, right-sidebar, fixed-layout, responsive-layout, custom-colors, custom-header, custom-menu, editor-style, featured-images, microformats, post-formats, rtl-language-support, sticky-post, threaded-comments, translation-ready
+Tags: gray, white, two-columns, right-sidebar, fixed-layout, responsive-layout, custom-menu, featured-images, rtl-language-support, translation-ready
 Text Domain: fenjoon
 */
-
+html, home, div{
+	margin: 0;
+	padding: 0;
+}
+.wrapper{
+	width: 960px;
+	margin:0 auto;
+}

@@ -44,4 +44,24 @@ function fjn_add_tasks_table_to_db(){
 	}
 }
 register_activation_hook(__FILE__, 'fjn_add_tasks_table_to_db');
+
+//******************************************
+// Add payments table to database
+//******************************************
+function fjn_add_payments_table_to_db(){
+	global $wpdb;
+	$payments_table = $wpdb->prefix. 'payments';
+	if( $wpdb->get_var( "SHOW TABLES LIKE '{$payments_table}'" ) != $payments_table ){
+		$query =
+			"CREATE TABLE {$payments_table} (
+			pay_id INT(6) UNSIGNED ZEROFILL AUTO_INCREMENT PRIMARY KEY,
+			project_id INT(6),
+			payment_date DATETIME,
+			amount_paid INT
+			);";
+		require_once( ABSPATH. 'wp-admin/includes/upgrade.php' );
+		dbDelta( $query );
+	}
+}
+register_activation_hook(__FILE__, 'fjn_add_payments_table_to_db');
 ?>
