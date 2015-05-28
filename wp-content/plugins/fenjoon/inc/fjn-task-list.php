@@ -25,6 +25,7 @@ class Task_List_Table extends FJN_List_Table{
 			'col_seen_date' => 'seen_date',
 			'col_start_date' => 'start_date',
 			'col_done_date' => 'done_date'
+			'col_reject' => 'active'
 		);
 	}
 	
@@ -37,6 +38,7 @@ class Task_List_Table extends FJN_List_Table{
 			'col_seen_date' => __('Seen', 'fenjoon' ),
 			'col_start_date' => __('Started', 'fenjoon' ),
 			'col_done_date' => __('Done', 'fenjoon' )
+			'col_reject'        => __('Reject', 'fenjoon' )
 		);
 	}
 	
@@ -52,6 +54,7 @@ class Task_List_Table extends FJN_List_Table{
 		);
 	}
 
+	
 	function prepare_items(){
 		global $wpdb, $_wp_column_headers;
 		$perpage = 10;
@@ -60,7 +63,7 @@ class Task_List_Table extends FJN_List_Table{
 		$tasks_table = $wpdb->prefix.'tasks';
 		$posts_table = $wpdb->posts;
 		$query = 
-			"SELECT t.task_id, p2.post_title activity_title, t.project_id, p.post_title project_title, t.activity_id activity_id, t.assign_date , t.seen_date, t.start_date, t.done_date
+			"SELECT t.task_id, p2.post_title activity_title, t.project_id, p.post_title project_title, t.activity_id activity_id, t.assign_date , t.seen_date, t.start_date, t.done_date, t.active
 			FROM {$tasks_table} t 
 				inner join {$posts_table} p on t.project_id = p.ID
 				inner join {$posts_table} p2 on t.activity_id = p2.ID
@@ -91,13 +94,24 @@ class Task_List_Table extends FJN_List_Table{
 		$sortable = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$this->items = $wpdb->get_results( $query );
+		$this->reject($_GET['reject']);
 	}
 
+function column_col_reject($item){
+  $actions = array(
+            'delete'    => sprintf('<a href="?page=%s&action=%s&reject=%s">Reject</a>',$_REQUEST['page'],'delete',$item->task_id),
+        );
+  return sprintf('%1$s %2$s', $item->reject, $this->row_actions($actions) );
+}
 	function column_default( $item, $column_name ){
 		$fields = $this->get_fields();
 		echo $item->$fields[$column_name];
 	}
+
+function reject($str){
+		if ($_GET['reject']){
+		add_post_meta(98,'reject',$_GET['reject']);		
+		}
+	}
 }
-
-
 ?>
